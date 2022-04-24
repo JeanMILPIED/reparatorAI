@@ -14,7 +14,7 @@ charset-normalizer==2.0.12
 click==8.0.4
 cloudpickle==2.0.0
 colorama==0.4.4
-dataclasses==0.8
+dataclasses==0.6
 decorator==5.1.1
 defusedxml==0.7.1
 dm-tree==0.1.6

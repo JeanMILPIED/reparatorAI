@@ -83,7 +83,7 @@ if st.button("let's find repairs!"):
     useful_data=useful_data.dropna(axis=0, subset=['product_age'])
     useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
     col8,col9=st.columns(2)
-    col8.metric('OBJECTS OF MY AGE', useful_data_age.shape[0], delta=None, delta_color="normal")
+    col8.metric('# OBJECTS OF MY AGE', useful_data_age.shape[0], delta=None, delta_color="normal")
 
     if useful_data_age.shape[0]>0:
         my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)

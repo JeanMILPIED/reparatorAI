@@ -89,8 +89,9 @@ my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, ty
 if st.button("let's find repairs! 🧠 "):
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand)
-        st.subheader('STATISTICS FOR {} {}'.format(my_final_object,my_final_brand))
-        st.write(the_message)
+        st.subheader('RESULT FOR {} {}'.format(my_final_object,my_final_brand))
+        st.subheader(the_message)
+        st.subheader('THE STATISTICS BEHIND IT')
         col5, col6, col7= st.columns(3)
         col5.metric('# FAILED OBJECTS', my_number_of_machine_brand, delta=None, delta_color="normal")
         col6.metric('MEAN AGE (years)', my_age_mean_of_machine_brand, delta=None, delta_color="normal")

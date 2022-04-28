@@ -28,12 +28,13 @@ def extract_info_machine(my_dataset,my_machine, my_brand):
         my_age_mean_of_machine_brand = round(my_useful_dataset['product_age'].median(), 2)
         
     #final message
-        if my_percent_of_repair >0.5:
-            the_message='run to repair ! 😍'
-        elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
-            the_message='you should try to repair it 😙'
-        else:
-            the_message='contact an expert! 😎'
+        if my_number_of_machine_brand>10:
+            if my_percent_of_repair >0.5:
+                the_message='run to repair ! 😍'
+            elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
+                the_message='you should try to repair it 😙'
+            else:
+                the_message='contact an expert! 😎'
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
     

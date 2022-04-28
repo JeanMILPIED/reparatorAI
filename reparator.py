@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 
 col10, col11=st.columns(2)
-col11.title('REPARATOR.AI')
-col11.subheader('free.open.share')
+col11.title('REPARATOR.AI  🔮')
+col11.subheader(' 🚀 free.open.share 🚀')
 col10.image('Mr_reparator.png')
-st.subheader('Can anybody repair this THING ?')
+st.subheader('Can anybody repair my machine please ? 😰')
 
 def extract_info_machine(my_dataset,my_machine, my_brand):
     my_useful_dataset = my_dataset
@@ -72,7 +72,7 @@ else:
 
 my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, type="default")
 
-if st.button("let's find repairs!"):
+if st.button("let's find repairs! 🧠 "):
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product= extract_info_machine(my_data, my_final_object, my_final_brand)
         st.subheader('STATISTICS FOR {} {}'.format(my_final_object,my_final_brand))

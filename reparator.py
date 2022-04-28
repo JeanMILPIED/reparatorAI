@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 
 col10, col11=st.columns(2)
-col11.title('REPARATOR.AI  🔮')
+col11.title('REPARATOR.AI ')
 col11.subheader(' 🚀 free.open.share 🚀')
-col10.image('Mr_reparator.png')
+#col10.image('Mr_reparator.png')
+col10.write(🔮🧠😻)
 st.subheader('Can anybody repair my machine please ? 😰')
 
 def extract_info_machine(my_dataset,my_machine, my_brand):

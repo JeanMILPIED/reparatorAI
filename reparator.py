@@ -12,7 +12,7 @@ st.write('')
 st.subheader('Can anybody repair my machine please ? 😰')
 
 def extract_info_machine(my_dataset,my_machine, my_brand):
-    the_message='Oups too few data 🙄'
+    the_message='Oups too few data for reparatorAI to answer 🙄'
     my_useful_dataset = my_dataset
     my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
     if my_useful_dataset.shape[0]>0:

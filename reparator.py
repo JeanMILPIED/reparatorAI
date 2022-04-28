@@ -115,8 +115,8 @@ if st.button("let's find repairs! 🧠 "):
             if ((my_percent_of_repair_product != 'not found') & (my_own_pc_repair != 'not found')):
                 st.metric('REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY', round(my_percent_of_repair_product * 100, 1),
                             delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
-        except:
-            st.write('MISSING INFO')
+    except:
+        st.write('MISSING INFO')
 
 
 st.caption('data source is : https://openrepair.org/open-data/downloads/')

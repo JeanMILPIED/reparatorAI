@@ -7,11 +7,12 @@ col11.title('REPARATOR.AI ')
 
 #col10.image('Mr_reparator.png')
 col10.title('🔮🧠😻')
-st.subheader(' 🚀 free.open.share 🚀')
+col10.subheader(' 🚀 free.open.share 🚀')
 st.write('')
 st.subheader('Can anybody repair my machine please ? 😰')
 
 def extract_info_machine(my_dataset,my_machine, my_brand):
+    the_message='Oups too few data 🙄'
     my_useful_dataset = my_dataset
     my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
     if my_useful_dataset.shape[0]>0:
@@ -25,10 +26,20 @@ def extract_info_machine(my_dataset,my_machine, my_brand):
         my_number_of_machine_brand = my_useful_dataset.shape[0]
         my_percent_of_repair = round(my_useful_dataset[my_useful_dataset['repair_status']=='Fixed'].shape[0] / my_number_of_machine_brand, 2)
         my_age_mean_of_machine_brand = round(my_useful_dataset['product_age'].median(), 2)
+        
+    #final message
+        if my_percent_of_repair >0.5:
+            the_message='run to repair ! 😍'
+        elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
+            the_message='you should try to repair it 😙'
+        else:
+            the_message='contact an expert! 😎'
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
+    
 
-    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product
+    
+    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, the_message
 
 def find_in_list(the_string, the_list):
     results=[]
@@ -77,8 +88,9 @@ my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, ty
 
 if st.button("let's find repairs! 🧠 "):
     try:
-        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product= extract_info_machine(my_data, my_final_object, my_final_brand)
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand)
         st.subheader('STATISTICS FOR {} {}'.format(my_final_object,my_final_brand))
+        st.write(the_message)
         col5, col6, col7= st.columns(3)
         col5.metric('# FAILED OBJECTS', my_number_of_machine_brand, delta=None, delta_color="normal")
         col6.metric('MEAN AGE (years)', my_age_mean_of_machine_brand, delta=None, delta_color="normal")

@@ -134,7 +134,7 @@ if st.button("let's find repairs! 🧠 "):
 st.caption('data source is : https://openrepair.org/open-data/downloads/')
 st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
 
-#insert the google analytics
+#insert the google analytics or stat_counter
 GA_JS = """
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MGD4ES78W6"></script>
@@ -145,6 +145,24 @@ GA_JS = """
         gtag('config', 'G-MGD4ES78W6');
     </script>
     """
+
+SC_JS="""
+<!-- Default Statcounter code for reparatorAI Web
+https://share.streamlit.io/jeanmilpied/reparatorai/main/reparator.py -->
+<script type="text/javascript">
+var sc_project=12751623; 
+var sc_invisible=1; 
+var sc_security="9447ca5b"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics Made Easy -
+Statcounter" href="https://statcounter.com/" target="_blank"><img
+class="statcounter" src="https://c.statcounter.com/12751623/0/9447ca5b/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+"""
 
 def inject_ga(GA_JS):
     GA_ID = "google_analytics"
@@ -167,7 +185,7 @@ def inject_ga(GA_JS):
         index_path.write_text(new_html)
 
 #inject_ga()
-st.components.v1.html(GA_JS)
+st.components.v1.html(SC_JS)
 
 
 

@@ -147,21 +147,7 @@ GA_JS = """
     """
 
 SC_JS="""
-<!-- Default Statcounter code for reparatorAI Web
-https://share.streamlit.io/jeanmilpied/reparatorai/main/reparator.py -->
-<script type="text/javascript">
-var sc_project=12751623; 
-var sc_invisible=1; 
-var sc_security="9447ca5b"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js" async></script>
-<noscript><div class="statcounter"><a title="Web Analytics Made Easy -
-Statcounter" href="https://statcounter.com/" target="_blank"><img
-class="statcounter" src="https://c.statcounter.com/12751623/0/9447ca5b/1/"
-alt="Web Analytics Made Easy - Statcounter"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+<a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>
 """
 
 def inject_ga(GA_JS):

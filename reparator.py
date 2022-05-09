@@ -152,7 +152,6 @@ def inject_ga():
         gtag('config', 'G-MGD4ES78W6');
     </script>
     """
-
     # Insert the script in the head tag of the static template inside your virtual
     index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
     logging.info(f'editing {index_path}')
@@ -166,7 +165,6 @@ def inject_ga():
         html = str(soup)
         new_html = html.replace('<head>', '<head>\n' + GA_JS)
         index_path.write_text(new_html)
-
 
 inject_ga()
 

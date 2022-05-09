@@ -137,7 +137,7 @@ st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeac
 #insert the google anlaytics
 
 def inject_ga():
-    GA_ID = "google_analytics2"
+    GA_ID = "google_analytics"
 
     # Note: Please replace the id from G-XXXXXXXXXX to whatever your
     # web application's id is. You will find this in your Google Analytics account
@@ -167,6 +167,8 @@ def inject_ga():
         index_path.write_text(new_html)
 
 inject_ga()
+
+st.components.v1.html(google_analytics_js)
 
 
 

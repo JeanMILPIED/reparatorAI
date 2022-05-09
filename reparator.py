@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from datetime import datetime
+import csv
 
 col10, col11=st.columns(2)
 col11.title('REPARATOR.AI ')
@@ -115,6 +117,12 @@ if st.button("let's find repairs! 🧠 "):
             if ((my_percent_of_repair_product != 'not found') & (my_own_pc_repair != 'not found')):
                 st.metric('REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY', round(my_percent_of_repair_product * 100, 1),
                             delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
+        #we save logs
+        this_is_now=datetime.now()
+        list_info=[this_is_now,my_final_object, my_final_brand, my_age]
+        with open('reparator_logs.csv', 'a', newline='\n') as f:
+            writer =csv.writer(f)
+            writer.writerow(list_info)
     except:
         st.write('MISSING INFO')
 

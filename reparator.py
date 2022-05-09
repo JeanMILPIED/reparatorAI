@@ -166,7 +166,7 @@ def inject_ga(GA_JS):
         new_html = html.replace('<head>', '<head>\n' + GA_JS)
         index_path.write_text(new_html)
 
-inject_ga()
+#inject_ga()
 st.components.v1.html(GA_JS)
 
 

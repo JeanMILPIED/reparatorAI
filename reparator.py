@@ -134,15 +134,8 @@ if st.button("let's find repairs! 🧠 "):
 st.caption('data source is : https://openrepair.org/open-data/downloads/')
 st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
 
-#insert the google anlaytics
-
-def inject_ga():
-    GA_ID = "google_analytics"
-
-    # Note: Please replace the id from G-XXXXXXXXXX to whatever your
-    # web application's id is. You will find this in your Google Analytics account
-    
-    GA_JS = """
+#insert the google analytics
+GA_JS = """
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-MGD4ES78W6"></script>
     <script>
@@ -152,6 +145,13 @@ def inject_ga():
         gtag('config', 'G-MGD4ES78W6');
     </script>
     """
+
+def inject_ga(GA_JS):
+    GA_ID = "google_analytics"
+
+    # Note: Please replace the id from G-XXXXXXXXXX to whatever your
+    # web application's id is. You will find this in your Google Analytics account
+    
     # Insert the script in the head tag of the static template inside your virtual
     index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
     logging.info(f'editing {index_path}')
@@ -167,8 +167,7 @@ def inject_ga():
         index_path.write_text(new_html)
 
 inject_ga()
-
-st.components.v1.html(google_analytics_js)
+st.components.v1.html(GA_JS)
 
 
 

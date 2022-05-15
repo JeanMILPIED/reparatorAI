@@ -12,7 +12,7 @@ col10, col11=st.columns(2)
 col11.title('REPARATOR.AI ')
 
 #col10.image('Mr_reparator.png')
-col10.title('🔮🧠😻')
+col10.title('🔮🧠😻🌎')
 col10.subheader(' 🚀 free.open.share 🚀')
 st.write('')
 st.subheader('Can anybody repair my machine please ? 😰')
@@ -43,9 +43,7 @@ def extract_info_machine(my_dataset,my_machine, my_brand):
                 the_message='contact an expert! 😎'
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
-    
-
-    
+   
     return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, the_message
 
 def find_in_list(the_string, the_list):
@@ -67,6 +65,21 @@ def find_in_list(the_string, the_list):
         proper_value='not found'
     return proper_value, results
 
+def get_co2_water(the_data,the_product):
+    the_usefull_data=the_data[the_data.product_category==the_product]
+    the_co2=the_usefull_data.CO2e.iloc[0]
+    the_water=the_usefull_data.water_L.iloc[0]
+    if 'TBD' in the_co2:
+        the_co2_message = "CO2: no data on CO2 yet 🙄"
+    else:
+        the_co2_message = "CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(the_co2)
+
+    if 'TBD' in the_water:
+        the_water_message = "WATER: no data on water yet 🙄"
+    else:
+        the_water_message = "WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
+            the_water)
+    return the_co2_message, the_water_message
 
 
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202110.csv')
@@ -74,6 +87,9 @@ my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_final_object=''
 my_final_brand=''
+
+my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
+my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
 col1, col2=st.columns(2)
 my_object=col1.text_input("object name", value="", max_chars=None, key=None, type="default")
@@ -98,6 +114,9 @@ if st.button("let's find repairs! 🧠 "):
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand)
         st.subheader('RESULT FOR {} {}'.format(my_final_object,my_final_brand))
         st.subheader(the_message)
+        the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object)
+        st.write(the_co2_message)
+        st.write(the_water_message)
         
         with st.expander('THE STATISTICS BEHIND IT'):
             col5, col6, col7= st.columns(3)

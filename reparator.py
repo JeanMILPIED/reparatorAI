@@ -148,9 +148,6 @@ if st.button("let's find repairs! 🧠 "):
         st.write('MISSING INFO')
 
 
-st.caption('data source is : https://openrepair.org/open-data/downloads/')
-st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
-
 col10,col11=st.columns(2)
 col10.write(":mailbox: send me a comment!")
 if col11.button("YES"):
@@ -166,10 +163,8 @@ if col11.button("YES"):
     st.markdown(contact_form, unsafe_allow_html=True)
     local_css("style/style.css")
 
-
-
-
-
+st.caption('data source is : https://openrepair.org/open-data/downloads/')
+st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
 
 #insert the google analytics or stat_counter
 GA_JS = """

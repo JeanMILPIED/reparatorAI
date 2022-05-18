@@ -151,7 +151,9 @@ if st.button("let's find repairs! 🧠 "):
 st.caption('data source is : https://openrepair.org/open-data/downloads/')
 st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
 
-if st.button(":mailbox: send me a comment!"):
+col10,col11=st.columns(2)
+col10.write(":mailbox: send me a comment!")
+if col11.button("YES"):
     contact_form="""
     <form action="https://formsubmit.co/c66fb24c1e59b02bd2b4cf68f974cd89" method="POST">
          <input type="hidden" name="_captcha" value="false">

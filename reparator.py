@@ -67,8 +67,8 @@ def find_in_list(the_string, the_list):
 
 def get_co2_water(the_data,the_product):
     the_usefull_data=the_data[the_data.product_category==the_product]
-    the_co2=the_usefull_data.CO2e.iloc[0]
-    the_water=the_usefull_data.water_L.iloc[0]
+    the_co2=str(the_usefull_data.CO2e.iloc[0]).replace(',',' to ')
+    the_water=str(the_usefull_data.water_L.iloc[0]).replace(',',' to ')
     if 'TBD' in the_co2:
         the_co2_message = "CO2: no data on CO2 yet 🙄"
     else:

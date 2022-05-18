@@ -106,9 +106,8 @@ my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, ty
 if st.button("let's find repairs! 🧠 "):
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand)
-        st.subheader('RESULT')
         st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
-        st.subheader(the_message)
+        st.subheader('RESULT: ' + the_message)
         the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object)
         st.write(the_co2_message)
         st.write(the_water_message)

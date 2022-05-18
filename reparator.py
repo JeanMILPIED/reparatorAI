@@ -148,9 +148,8 @@ if st.button("let's find repairs! 🧠 "):
         st.write('MISSING INFO')
 
 
-col10,col11=st.columns(2)
-col10.write(":mailbox: send me a comment!")
-if col11.button("YES"):
+st.write("Send me a comment! 🦄")
+if st.button("GO!"):
     contact_form="""
     <form action="https://formsubmit.co/c66fb24c1e59b02bd2b4cf68f974cd89" method="POST">
          <input type="hidden" name="_captcha" value="false">

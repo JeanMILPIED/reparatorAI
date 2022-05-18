@@ -153,7 +153,7 @@ st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeac
 
 if st.button(":mailbox: send me a comment!"):
     contact_form="""
-    <form action="https://formsubmit.co/eljardinero31@gmail.com" method="POST">
+    <form action="https://formsubmit.co/c66fb24c1e59b02bd2b4cf68f974cd89" method="POST">
          <input type="hidden" name="_captcha" value="false">
          <input type="text" name="name" placeholder="Your Name" required>
          <input type="email" name="email" placeholder="Your email" required>

@@ -147,6 +147,25 @@ if st.button("let's find repairs! 🧠 "):
 st.caption('data source is : https://openrepair.org/open-data/downloads/')
 st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
 
+st.write(":mailbox: send me a comment!")
+contact_form="""
+<form action="https://formsubmit.co/eljardinero31@gmail.com" method="POST">
+     <input type="hidden" name="_captcha" value="false">
+     <input type="text" name="name" placeholder="Your Name" required>
+     <input type="email" name="email" placeholder="Your email" required>
+     <textarea name="message" placeholder="your gentle words"></textarea>
+     <button type="submit">Send</button>
+</form>
+"""
+st.markdown(contact_form, unsafe_allow_html=True)
+
+def local_css(filename):
+    with open(filename) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+local_css("style/style.css")
+
+
 #insert the google analytics or stat_counter
 GA_JS = """
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -185,6 +204,8 @@ def inject_ga(GA_JS):
 
 #inject_ga()
 st.components.v1.html(SC_JS)
+
+
 
 
 

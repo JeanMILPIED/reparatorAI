@@ -91,13 +91,15 @@ my_final_brand=''
 my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
-col1, col2=st.columns(2)
-my_object=col1.text_input("object name", value="", max_chars=None, key=None, type="default")
-my_final_object, my_final_object_best_results=find_in_list(my_object, pd.Series(my_data.product_category.unique()).sort_values().tolist())
-if my_final_object !='not found':
-    my_final_object = col2.selectbox('chose the right one', tuple(my_final_object_best_results))
-else:
-    col2.write ('NOT FOUND !')
+#col1, col2=st.columns(2)
+#my_object=col1.text_input("object name", value="", max_chars=None, key=None, type="default")
+#my_final_object, my_final_object_best_results=find_in_list(my_object, pd.Series(my_data.product_category.unique()).sort_values().tolist())
+#if my_final_object !='not found':
+#    my_final_object = col2.selectbox('chose the right one', tuple(my_final_object_best_results))
+#else:
+#    col2.write('NOT FOUND !')
+
+my_final_object = st.selectbox("object name - chose the right one", tuple(pd.Series(my_data.product_category.unique()).sort_values().tolist()))
 
 col3, col4=st.columns(2)
 my_brand=col3.text_input("object brand", value="", max_chars=None, key=None, type="default")
@@ -105,7 +107,7 @@ my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_
 if my_final_brand !='not found':
     my_final_brand = col4.selectbox('chose the right one', tuple(my_final_brand_best_results))
 else:
-    col4.write ('NOT FOUND !')
+    col4.write('NOT FOUND !')
 
 my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, type="default")
 

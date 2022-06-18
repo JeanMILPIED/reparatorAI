@@ -173,7 +173,7 @@ selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LI
  'HEADPHONES', 'LARGE HOME ELECTRICAL', 'MUSICAL INSTRUMENT', 'PROJECTOR',
  'PC ACCESSORY', 'AIRCON/DEHUMIDIFIER', 'FAN', 'GAMES CONSOLE']
 
-selectObjectList_FR=['Outil Puissant', 'Jouet', 'Sèche cheveux', 'Luminaires et guirlandes déco',
+selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires et guirlandes déco',
  'Lampe', 'Radio portable', 'Appareil de divertissement portable', 'Robot de cuisine', 'Petit électroménager de maison',
  'équipement pour cheveux & beauté', 'Divers', 'Machine à coudre', 'Montre / Réveil', 'Composants HI-Fi', 'Ordinateur de Bureau',
  'Batterie / chargeur / adaptateur', 'Petit électroménager de cuisine', 'Aspirateur', 'accessoire TV et jeux videos', 'Machine à café',

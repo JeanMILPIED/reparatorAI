@@ -11,18 +11,36 @@ import shutil
 col10, col11=st.columns(2)
 col11.title('REPARATOR.AI ')
 
-#col10.image('Mr_reparator.png')
-col10.title('🔮🧠😻🌎')
-col10.subheader(' 🚀 free.open.share 🚀')
-st.write('')
-st.subheader('Can anybody repair my machine please ? 😰')
+lang_var = col11.radio("Language",('UK','FR'))
+
+if lang_var=='UK':
+    #col10.image('Mr_reparator.png')
+    col10.title('🔮🧠😻🌎')
+    col10.subheader(' 🚀 free.open.share 🚀')
+    st.write('')
+    st.subheader('Can anybody repair my machine please ? 😰')
+
+elif lang_var=='FR':
+    # col10.image('Mr_reparator.png')
+    col10.title('🔮🧠😻🌎')
+    col10.subheader(' 🚀 libre.ouvert.partage 🚀')
+    st.write('')
+    st.subheader('Mon matos est-il réparable ? 😰')
+
+else:
+    st.write('error language')
 
 def local_css(filename):
     with open(filename) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-def extract_info_machine(my_dataset,my_machine, my_brand):
-    the_message='Oups too few data for reparatorAI to answer 🙄'
+def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
+    if lang_var=='UK':
+        the_message='Oups too few data for reparatorAI to answer 🙄'
+    elif lang_var=='FR':
+        the_message = 'Oups pas assez de données pour que reparatorAI te réponde 🙄'
+    else:
+        st.write('error')
     my_useful_dataset = my_dataset
     my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
     if my_useful_dataset.shape[0]>0:
@@ -40,11 +58,25 @@ def extract_info_machine(my_dataset,my_machine, my_brand):
     #final message
         if my_number_of_machine_brand>10:
             if my_percent_of_repair >0.5:
-                the_message='run to repair ! 😍'
+                if lang_var=='UK':
+                    the_message='run to repair ! 😍'
+                elif lang_var=='FR':
+                    the_message='cours le faire réparer ! 😍'
+                else: st.write('error')
             elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
-                the_message='you should try to repair it 😙'
+                if lang_var=='UK':
+                    the_message='you should try to repair it 😙'
+                elif lang_var=='FR':
+                    the_message = "ça vaut le coup d'essayer de le réparer 😙"
+                else:
+                    st.write('error')
             else:
-                the_message='contact an expert! 😎'
+                if lang_var=='UK':
+                    the_message='contact an expert! 😎'
+                elif lang_var=='FR':
+                    the_message = 'il te faut un expert de la réparation! 😎'
+                else:
+                    st.write('error')
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
    
@@ -69,22 +101,69 @@ def find_in_list(the_string, the_list):
         proper_value='not found'
     return proper_value, results
 
-def get_co2_water(the_data,the_product):
+def get_co2_water(the_data,the_product, lang_var):
     the_usefull_data=the_data[the_data.product_category==the_product]
-    the_co2=str(the_usefull_data.CO2e.iloc[0]).replace(',',' to ')
-    the_water=str(the_usefull_data.water_L.iloc[0]).replace(',',' to ')
-    if 'TBD' in the_co2:
-        the_co2_message = "CO2: no data on CO2 yet 🙄"
-    else:
-        the_co2_message = "CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(the_co2)
+    if lang_var=='UK':
+        the_co2=str(the_usefull_data.CO2e.iloc[0]).replace(',',' to ')
+        the_water=str(the_usefull_data.water_L.iloc[0]).replace(',',' to ')
+        if 'TBD' in the_co2:
+            the_co2_message = "CO2: no data on CO2 yet 🙄"
+        else:
+            the_co2_message = "CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(the_co2)
 
-    if 'TBD' in the_water:
-        the_water_message = "WATER: no data on water yet 🙄"
+        if 'TBD' in the_water:
+            the_water_message = "WATER: no data on water yet 🙄"
+        else:
+            the_water_message = "WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
+                the_water)
+    elif lang_var=='FR':
+        the_co2 = str(the_usefull_data.CO2e.iloc[0]).replace(',', ' à ')
+        the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' à ')
+        if 'TBD' in the_co2:
+            the_co2_message = "CO2: pas encore de data dispo 🙄"
+        else:
+            the_co2_message = "CO2: si tu répares,  {} kg of CO2 évitées. La planète te dit merci 🌍🌎🌏".format(
+                the_co2)
+
+        if 'TBD' in the_water:
+            the_water_message = "EAU: pas encore de data dispo 🙄"
+        else:
+            the_water_message = "EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
+                the_water)
     else:
-        the_water_message = "WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
-            the_water)
+        the_co2_message, the_water_message = 'not found', 'not found'
     return the_co2_message, the_water_message
 
+if lang_var=='UK':
+    dict_screen={"selectBox1":"OBJECT name - chose the right one",
+                 "textInput1":"BRAND",
+                 "selectBox2":'chose the right one',
+                 "textInput2":'NOT FOUND !',
+                 "textInput3": "object age (years)",
+                 "button1": "let's find repairs! 🧠 ",
+                 "textInput4":'THE STATISTICS BEHIND IT',
+                 "textInput5":'# FAILED OBJECTS',
+                 "textInput6":'MEAN AGE (years)',
+                 "textInput7": 'REPAIRS SUCCESS RATE (%)',
+                 "textInput8":'# OBJECTS OF MY AGE',
+                 "textInput9":'REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY',
+                 "textInput10":"Send me a comment! 🦄"
+                 }
+elif lang_var=='FR':
+    dict_screen={"selectBox1":"Type d'Objet - Quel est le tien ?",
+                 "textInput1":"MARQUE",
+                 "selectBox2":'Choisis dans la liste',
+                 "textInput2":'PAS TROUVé !',
+                 "textInput3": "Age de ton objet (en années)",
+                 "button1": "Allons trouver si c'est réparable ! 🧠 ",
+                 "textInput4": 'LES STATISTIQUES DE PANNES',
+                 "textInput5": "NOMBRE D'OBJETS EN PANNE",
+                 "textInput6": "AGE MOYEN (années)",
+                 "textInput7": "TAUX DE SUCCES DES REPARATIONS (%)",
+                 "textInput8": "NOMBRE D'OBJETS DU MÊME AGE QUE LE MIEN",
+                 "textInput9": "TAUX DE SUCCES DES REPARATIONS (%) DANS CETTE CATEGORIE DE PRODUITS",
+                 "textInput10": "Envois-moi un avis! 🦄"
+                 }
 
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202110.csv')
 my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
@@ -95,60 +174,71 @@ my_final_brand=''
 my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
-my_final_object = st.selectbox("OBJECT name - chose the right one", tuple(pd.Series(my_data.product_category.unique()).sort_values().tolist()))
+my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(pd.Series(my_data.product_category.unique()).sort_values().tolist()))
 
 col3, col4=st.columns(2)
-my_brand=col3.text_input("BRAND", value="", max_chars=None, key=None, type="default")
+my_brand=col3.text_input(dict_screen["textInput1"], value="", max_chars=None, key=None, type="default")
 my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_data[my_data.product_category==my_final_object].brand.unique()).sort_values().tolist())
 if my_final_brand !='not found':
-    my_final_brand = col4.selectbox('chose the right one', tuple(my_final_brand_best_results))
+    my_final_brand = col4.selectbox(dict_screen["selectBox2"], tuple(my_final_brand_best_results))
 else:
-    col4.write('NOT FOUND !')
+    col4.write(dict_screen["textInput2"])
 
-my_age=st.text_input("object age (years)", value=0, max_chars=None, key=None, type="default")
+my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
 
-if st.button("let's find repairs! 🧠 "):
+if st.button(dict_screen["button1"]):
     try:
-        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand)
-        st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
-        st.subheader('RESULT: ' + the_message)
-        the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object)
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
+        if lang_var=="UK":
+            st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
+            st.subheader('RESULT: ')
+            st.write(the_message)
+        elif lang_var=='FR':
+            st.subheader('pour {} {} qui a déjà {} ans'.format(my_final_object, my_final_brand, my_age))
+            st.subheader('LES RESULTATS ')
+            st.write(the_message)
+        the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object, lang_var)
         st.write(the_co2_message)
         st.write(the_water_message)
-        
-        with st.expander('THE STATISTICS BEHIND IT'):
+
+        with st.expander(dict_screen["textInput4"]):
             col5, col6, col7= st.columns(3)
-            col5.metric('# FAILED OBJECTS', my_number_of_machine_brand, delta=None, delta_color="normal")
-            col6.metric('MEAN AGE (years)', my_age_mean_of_machine_brand, delta=None, delta_color="normal")
-            col7.metric('REPAIRS SUCCESS RATE (%)', round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
+            col5.metric(dict_screen["textInput5"], my_number_of_machine_brand, delta=None, delta_color="normal")
+            col6.metric(dict_screen["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
+            col7.metric(dict_screen["textInput7"], round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
 
             useful_data=useful_data.dropna(axis=0, subset=['product_age'])
             useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
             col8,col9=st.columns(2)
-            col8.metric('# OBJECTS OF MY AGE', useful_data_age.shape[0], delta=None, delta_color="normal")
+            col8.metric(dict_screen["textInput8"], useful_data_age.shape[0], delta=None, delta_color="normal")
 
             if useful_data_age.shape[0]>0:
                 my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)
-                col9.metric('REPAIRS SUCCESS RATE (%)', round(my_own_pc_repair * 100,1),
+                col9.metric(dict_screen["textInput7"], round(my_own_pc_repair * 100,1),
                             delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
             else:
                 my_own_pc_repair='Not found any'
-                col9.metric('REPAIRS SUCCESS RATE (%)', my_own_pc_repair)
+                col9.metric(dict_screen["textInput7"], my_own_pc_repair)
 
             if ((my_percent_of_repair_product != 'not found') & (my_own_pc_repair != 'not found')):
-                st.metric('REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY', round(my_percent_of_repair_product * 100, 1),
+                st.metric(dict_screen["textInput9"], round(my_percent_of_repair_product * 100, 1),
                             delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
-#         #we save logs
-#         this_is_now=datetime.now()
-#         list_info=[this_is_now,my_final_object, my_final_brand, my_age]
-#         with open('reparator_logs.csv', 'a', newline='\n') as f:
-#             writer =csv.writer(f)
-#             writer.writerow(list_info)
+        #         #we save logs
+    #         this_is_now=datetime.now()
+    #         list_info=[this_is_now,my_final_object, my_final_brand, my_age]
+    #         with open('reparator_logs.csv', 'a', newline='\n') as f:
+    #             writer =csv.writer(f)
+    #             writer.writerow(list_info)
     except:
-        st.write('MISSING INFO')
+        if lang_var=='UK':
+            st.write('MISSING INFO')
+        elif lang_var=='FR':
+            st.write('INFORMATION MANQUANTE')
+        else:
+            st.write ('error')
 
 
-if st.button("Send me a comment! 🦄"):
+if st.button(dict_screen["textInput10"]):
     contact_form="""
     <form action="https://formsubmit.co/c66fb24c1e59b02bd2b4cf68f974cd89" method="POST">
          <input type="hidden" name="_captcha" value="false">
@@ -161,8 +251,15 @@ if st.button("Send me a comment! 🦄"):
     st.markdown(contact_form, unsafe_allow_html=True)
     local_css("style/style.css")
 
-st.caption('data source is : https://openrepair.org/open-data/downloads/')
-st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
+if lang_var=='UK':
+    st.caption('data source is : https://openrepair.org/open-data/downloads/')
+    st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
+elif lang_var=='FR':
+    st.caption('lien vers les données sources : https://openrepair.org/open-data/downloads/')
+    st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
+else:
+    st.write ('error')
+
 
 #insert the google analytics or stat_counter
 GA_JS = """

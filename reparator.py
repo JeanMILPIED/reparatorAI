@@ -122,7 +122,7 @@ def get_co2_water(the_data,the_product, lang_var):
         if 'TBD' in the_co2:
             the_co2_message = "CO2: pas encore de data dispo 🙄"
         else:
-            the_co2_message = "CO2: si tu répares,  {} kg of CO2 évitées. La planète te dit merci 🌍🌎🌏".format(
+            the_co2_message = "CO2: si tu répares,  {} kg de CO2 évitées. La planète te dit merci 🌍🌎🌏".format(
                 the_co2)
 
         if 'TBD' in the_water:
@@ -147,8 +147,7 @@ if lang_var=='UK':
                  "textInput7": 'REPAIRS SUCCESS RATE (%)',
                  "textInput8":'# OBJECTS OF MY AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY',
-                 "textInput10":"Send me a comment! 🦄"
-                 }
+                 "textInput10":"Send me a comment! 🦄"}
 elif lang_var=='FR':
     dict_screen={"selectBox1":"Type d'Objet - Quel est le tien ?",
                  "textInput1":"MARQUE",
@@ -164,6 +163,24 @@ elif lang_var=='FR':
                  "textInput9": "TAUX DE SUCCES DES REPARATIONS (%) DANS CETTE CATEGORIE DE PRODUITS",
                  "textInput10": "Envois-moi un avis! 🦄"
                  }
+selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
+ 'PORTABLE RADIO', 'HANDHELD ENTERTAINMENT DEVICE', 'FOOD PROCESSOR', 'SMALL HOME ELECTRICAL',
+ 'HAIR & BEAUTY ITEM', 'MISC', 'SEWING MACHINE', 'WATCH/CLOCK', 'HI-FI SEPARATES',
+ 'DESKTOP COMPUTER', 'BATTERY/CHARGER/ADAPTER', 'SMALL KITCHEN ITEM', 'VACUUM',
+ 'TV AND GAMING-RELATED ACCESSORIES', 'COFFEE MAKER', 'KETTLE', 'IRON',
+ 'DIGITAL COMPACT CAMERA', 'PRINTER/SCANNER', 'LAPTOP', 'HI-FI INTEGRATED',
+ 'PAPER SHREDDER', 'TOASTER', 'FLAT SCREEN', 'MOBILE', 'TABLET', 'DSLR/VIDEO CAMERA',
+ 'HEADPHONES', 'LARGE HOME ELECTRICAL', 'MUSICAL INSTRUMENT', 'PROJECTOR',
+ 'PC ACCESSORY', 'AIRCON/DEHUMIDIFIER', 'FAN', 'GAMES CONSOLE']
+
+selectObjectList_FR=['Outil Puissant', 'Jouet', 'Sèche cheveux', 'Luminaires et guirlandes déco',
+ 'Lampe', 'Radio portable', 'Appareil de divertissement portable', 'Robot de cuisine', 'Petit électroménager de maison',
+ 'équipement pour cheveux & beauté', 'Divers', 'Machine à coudre', 'Montre / Réveil', 'Composants HI-Fi', 'Ordinateur de Bureau',
+ 'Batterie / chargeur / adaptateur', 'Petit électroménager de cuisine', 'Aspirateur', 'accessoire TV et jeux videos', 'Machine à café',
+ 'Bouilloir', 'Fer à repasser', 'Appareil photo numérique', 'Imprimante / scanner', 'Ordinateur portable', 'Hi-Fi', 'Broyeuse à papier',
+ 'Grille pains', 'Ecran plat', 'Téléphone portable', 'Tablette', 'Camescope', 'Ecouteurs', 'Gros électroménager',
+ 'Instrument de musique', 'Vidéo projecteur', 'Accessoire PC', 'Climatiseur / déshumidificateur', 'Ventilateur', 'Console de jeux vidéo']
+
 
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202110.csv')
 my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
@@ -174,8 +191,12 @@ my_final_brand=''
 my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
-my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(pd.Series(my_data.product_category.unique()).sort_values().tolist()))
-
+if lang_var=='UK':
+    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_UK))
+elif lang_var=='FR':
+    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_FR))
+    index_in_list=selectObjectList_FR.index(my_final_object_FR)
+    my_final_object=selectObjectList_UK[index_in_list]
 col3, col4=st.columns(2)
 my_brand=col3.text_input(dict_screen["textInput1"], value="", max_chars=None, key=None, type="default")
 my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_data[my_data.product_category==my_final_object].brand.unique()).sort_values().tolist())
@@ -194,7 +215,7 @@ if st.button(dict_screen["button1"]):
             st.subheader('RESULT: ')
             st.write(the_message)
         elif lang_var=='FR':
-            st.subheader('pour {} {} qui a déjà {} ans'.format(my_final_object, my_final_brand, my_age))
+            st.subheader('pour {} {} qui a déjà {} ans'.format(my_final_object_FR, my_final_brand, my_age))
             st.subheader('LES RESULTATS ')
             st.write(the_message)
         the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object, lang_var)

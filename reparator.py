@@ -144,7 +144,7 @@ if lang_var=='UK':
                  "textInput4":'THE STATISTICS BEHIND IT',
                  "textInput5":'# FAILED OBJECTS',
                  "textInput6":'MEAN AGE (years)',
-                 "textInput7": 'REPAIRS SUCCESS RATE (%)',
+                 "textInput7": 'REPAIR SUCCESS RATE (%)',
                  "textInput8":'# OBJECTS OF MY AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY',
                  "textInput10":"Send me a comment! 🦄"}
@@ -155,12 +155,12 @@ elif lang_var=='FR':
                  "textInput2":'PAS TROUVé !',
                  "textInput3": "Age de ton objet (en années)",
                  "button1": "Allons trouver si c'est réparable ! 🧠 ",
-                 "textInput4": 'LES STATISTIQUES DE PANNES',
+                 "textInput4": 'STATISTIQUES DE PANNES',
                  "textInput5": "NOMBRE D'OBJETS EN PANNE",
                  "textInput6": "AGE MOYEN (années)",
-                 "textInput7": "TAUX DE SUCCES DES REPARATIONS (%)",
+                 "textInput7": "% DES REPARATIONS",
                  "textInput8": "NOMBRE D'OBJETS DU MÊME AGE QUE LE MIEN",
-                 "textInput9": "TAUX DE SUCCES DES REPARATIONS (%) DANS CETTE CATEGORIE DE PRODUITS",
+                 "textInput9": "% DES REPARATIONS DANS CETTE CATEGORIE DE PRODUITS",
                  "textInput10": "Envois-moi un avis! 🦄"
                  }
 selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
@@ -212,12 +212,10 @@ if st.button(dict_screen["button1"]):
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
         if lang_var=="UK":
             st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
-            st.subheader('RESULT: ')
-            st.write(the_message)
+            st.subheader(the_message)
         elif lang_var=='FR':
             st.subheader('pour {} {} qui a déjà {} ans'.format(my_final_object_FR, my_final_brand, my_age))
-            st.subheader('LES RESULTATS ')
-            st.write(the_message)
+            st.subheader(the_message)
         the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object, lang_var)
         st.write(the_co2_message)
         st.write(the_water_message)

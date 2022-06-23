@@ -49,7 +49,7 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     else:
         my_percent_of_repair_product='not found'
 
-    my_useful_dataset = my_useful_dataset[my_useful_dataset['brand'] == my_brand]
+    my_useful_dataset = my_useful_dataset[my_useful_dataset['brand_ok'] == my_brand]
     if my_useful_dataset.shape[0] > 0:
         my_number_of_machine_brand = my_useful_dataset.shape[0]
         my_percent_of_repair = round(my_useful_dataset[my_useful_dataset['repair_status']=='Fixed'].shape[0] / my_number_of_machine_brand, 2)
@@ -183,7 +183,7 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
 
 
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202110.csv')
-my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
+#my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_final_object=''
 my_final_brand=''
@@ -199,7 +199,7 @@ elif lang_var=='FR':
     my_final_object=selectObjectList_UK[index_in_list]
 col3, col4=st.columns(2)
 my_brand=col3.text_input(dict_screen["textInput1"], value="", max_chars=None, key=None, type="default")
-my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_data[my_data.product_category==my_final_object].brand.unique()).sort_values().tolist())
+my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist())
 if my_final_brand !='not found':
     my_final_brand = col4.selectbox(dict_screen["selectBox2"], tuple(my_final_brand_best_results))
 else:

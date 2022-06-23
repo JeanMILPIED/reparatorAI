@@ -257,7 +257,12 @@ if st.button(dict_screen["button1"]):
             st.write('INFORMATION MANQUANTE')
         else:
             st.write ('error')
+st.write("                                                                                                                                           ")
 
+from PIL import Image
+hop_img= Image.open('hop.png')
+st.image(hop_img, width=100)
+st.caption("https://www.halteobsolescence.org/")
 
 if st.button(dict_screen["textInput10"]):
     contact_form="""
@@ -275,6 +280,7 @@ if st.button(dict_screen["textInput10"]):
 if lang_var=='UK':
     st.caption('data source is : https://openrepair.org/open-data/downloads/')
     st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
+
 elif lang_var=='FR':
     st.caption('lien vers les données sources : https://openrepair.org/open-data/downloads/')
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")

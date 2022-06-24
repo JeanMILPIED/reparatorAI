@@ -256,11 +256,16 @@ if st.button(dict_screen["button1"]):
         else:
             st.write ('error')
 st.write("                                                                                                                                           ")
-
-from PIL import Image
-hop_img= Image.open('hop.png')
-st.image(hop_img, width=100)
-st.caption("https://www.halteobsolescence.org/")
+if lang_var=='UK':
+    st.subheader("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
+elif lang_var=='FR':
+    st.subheader("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
+else:
+    st.write ('error')
+#from PIL import Image
+#hop_img= Image.open('hop.png')
+#st.image(hop_img, width=100)
+#st.caption("https://www.halteobsolescence.org/")
 
 if st.button(dict_screen["textInput10"]):
     contact_form="""
@@ -284,7 +289,6 @@ elif lang_var=='FR':
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
 else:
     st.write ('error')
-
 
 #insert the google analytics or stat_counter
 GA_JS = """

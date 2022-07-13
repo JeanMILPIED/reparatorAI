@@ -261,11 +261,12 @@ st.write("                                                                      
 
 from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')
-st.image(PD_img, width=300)
+col12,col13=st.columns(2)
+col12.image(PD_img, width=300)
 if lang_var=='UK':
-    st.write("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
+    col13.write("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
 elif lang_var=='FR':
-    st.write("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
+    col13.write("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
 else:
     st.write ('error')
 

@@ -256,6 +256,10 @@ if st.button(dict_screen["button1"]):
         else:
             st.write ('error')
 st.write("                                                                                                                                           ")
+
+PD_img= Image.open('Produits-Durables_logo.png')
+st.image(PD_img, width=500)
+
 if lang_var=='UK':
     st.subheader("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
 elif lang_var=='FR':

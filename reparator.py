@@ -147,7 +147,8 @@ if lang_var=='UK':
                  "textInput7": 'REPAIR SUCCESS RATE (%)',
                  "textInput8":'# OBJECTS OF MY AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY',
-                 "textInput10":"Send me a comment! 🦄"}
+                 "textInput10":"Send me a comment! 🦄",
+                 "textInput11":"French Actors for reparation 🚀"}
 elif lang_var=='FR':
     dict_screen={"selectBox1":"Type d'Objet - Quel est le tien ?",
                  "textInput1":"MARQUE",
@@ -161,7 +162,8 @@ elif lang_var=='FR':
                  "textInput7": "% DES REPARATIONS",
                  "textInput8": "NOMBRE D'OBJETS DU MÊME AGE QUE LE MIEN",
                  "textInput9": "% DES REPARATIONS DANS CETTE CATEGORIE DE PRODUITS",
-                 "textInput10": "Envois-moi un avis! 🦄"
+                 "textInput10": "Envois-moi un avis! 🦄",
+                 "textInput11": "Les acteurs Français de la réparation 🚀"
                  }
 selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
  'PORTABLE RADIO', 'HANDHELD ENTERTAINMENT DEVICE', 'FOOD PROCESSOR', 'SMALL HOME ELECTRICAL',
@@ -256,9 +258,10 @@ if st.button(dict_screen["button1"]):
         else:
             st.write ('error')
 st.write("                                                                                                                                           ")
+
 from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')
-st.image(PD_img, width=500)
+st.image(PD_img, width=300)
 
 if lang_var=='UK':
     st.subheader("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
@@ -293,6 +296,20 @@ elif lang_var=='FR':
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
 else:
     st.write ('error')
+
+with st.expander(dict_screen["textInput11"]):
+    st.write('1001PIECES: https://www.1001pieces.com/')
+    st.write('ENVIE: https://www.envie.org/sequiper-reparer/')
+    st.write('iFIXIT: https://fr.ifixit.com/')
+    st.write('MURFY: https://murfy.fr/')
+    st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
+    st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')
+    st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
+    st.write('SPAREKA: https://www.spareka.fr/')
+
+
+
+
 
 #insert the google analytics or stat_counter
 GA_JS = """

@@ -148,7 +148,7 @@ if lang_var=='UK':
                  "textInput8":'# OBJECTS OF MY AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR THIS PRODUCT CATEGORY',
                  "textInput10":"Send me a comment! 🦄",
-                 "textInput11":"French Actors for reparation 🚀"}
+                 "textInput11":"French Actors for Repair 🚀"}
 elif lang_var=='FR':
     dict_screen={"selectBox1":"Type d'Objet - Quel est le tien ?",
                  "textInput1":"MARQUE",

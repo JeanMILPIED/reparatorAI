@@ -256,7 +256,7 @@ if st.button(dict_screen["button1"]):
         else:
             st.write ('error')
 st.write("                                                                                                                                           ")
-
+from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')
 st.image(PD_img, width=500)
 
@@ -266,7 +266,7 @@ elif lang_var=='FR':
     st.subheader("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
 else:
     st.write ('error')
-#from PIL import Image
+#
 #hop_img= Image.open('hop.png')
 #st.image(hop_img, width=100)
 #st.caption("https://www.halteobsolescence.org/")

@@ -262,13 +262,22 @@ st.write("                                                                      
 from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')
 st.image(PD_img, width=300)
-
 if lang_var=='UK':
-    st.subheader("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
+    st.write("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
 elif lang_var=='FR':
-    st.subheader("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
+    st.write("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
 else:
     st.write ('error')
+
+with st.expander(dict_screen["textInput11"]):
+    st.write('1001PIECES: https://www.1001pieces.com/')
+    st.write('ENVIE: https://www.envie.org/sequiper-reparer/')
+    st.write('iFIXIT: https://fr.ifixit.com/')
+    st.write('MURFY: https://murfy.fr/')
+    st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
+    st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')
+    st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
+    st.write('SPAREKA: https://www.spareka.fr/')
 #
 #hop_img= Image.open('hop.png')
 #st.image(hop_img, width=100)
@@ -296,20 +305,6 @@ elif lang_var=='FR':
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
 else:
     st.write ('error')
-
-with st.expander(dict_screen["textInput11"]):
-    st.write('1001PIECES: https://www.1001pieces.com/')
-    st.write('ENVIE: https://www.envie.org/sequiper-reparer/')
-    st.write('iFIXIT: https://fr.ifixit.com/')
-    st.write('MURFY: https://murfy.fr/')
-    st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
-    st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')
-    st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
-    st.write('SPAREKA: https://www.spareka.fr/')
-
-
-
-
 
 #insert the google analytics or stat_counter
 GA_JS = """

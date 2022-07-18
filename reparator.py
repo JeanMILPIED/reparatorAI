@@ -281,10 +281,6 @@ with st.expander(dict_screen["textInput11"]):
     st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
     st.write('SOSAV: https://www.sosav.fr/guides/electromenager/petit-electromenager/')
     st.write('SPAREKA: https://www.spareka.fr/')
-#
-#hop_img= Image.open('hop.png')
-#st.image(hop_img, width=100)
-#st.caption("https://www.halteobsolescence.org/")
 
 if st.button(dict_screen["textInput10"]):
     contact_form="""

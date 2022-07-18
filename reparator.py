@@ -274,10 +274,12 @@ with st.expander(dict_screen["textInput11"]):
     st.write('1001PIECES: https://www.1001pieces.com/')
     st.write('ENVIE: https://www.envie.org/sequiper-reparer/')
     st.write('iFIXIT: https://fr.ifixit.com/')
+    st.write('LeSitedeLaPiece: https://www.lesitedelapiece.com/content/8-tous-nos-appareils')
     st.write('MURFY: https://murfy.fr/')
     st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
     st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')
     st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
+    st.write('SOSAV: https://www.sosav.fr/guides/electromenager/petit-electromenager/')
     st.write('SPAREKA: https://www.spareka.fr/')
 #
 #hop_img= Image.open('hop.png')

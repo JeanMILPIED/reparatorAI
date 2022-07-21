@@ -279,6 +279,7 @@ with st.expander(dict_screen["textInput11"]):
     st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
     st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')
     st.write('REPAIR CAFE PARIS: https://www.repaircafeparis.fr/')
+    st.write('REEVIVE: https://www.reevive.fr/')
     st.write('SOSAV: https://www.sosav.fr/guides/electromenager/petit-electromenager/')
     st.write('SPAREKA: https://www.spareka.fr/')
 

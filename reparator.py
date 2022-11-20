@@ -7,7 +7,7 @@ import pathlib
 from bs4 import BeautifulSoup
 import logging
 import shutil
-import requests as r
+import requests
 
 col10, col11=st.columns(2)
 col11.title('REPARATOR.AI ')
@@ -139,8 +139,7 @@ def get_co2_water(the_data,the_product, lang_var):
 
 def crawl_query(query):
     st.write(query)
-    req = r.get(f"https://www.bing.com/search?q={query}",
-                 headers = {"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
+    req = requests.get(f"https://www.bing.com/search?q={query}", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
     result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
     st.write(result_str)
     if req.status_code == 200: #Status code 200 indicates a successful request

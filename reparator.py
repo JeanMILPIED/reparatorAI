@@ -27,7 +27,7 @@ elif lang_var=='FR':
     col10.title('🔮🧠😻🌎')
     col10.subheader(' 🚀 libre.ouvert.partage 🚀')
     st.write('')
-    st.subheader('Mon matos est-il réparable ? 😰')
+    st.subheader('Mon équipement est-il réparable ? 😰')
 
 else:
     st.write('error language')
@@ -136,6 +136,53 @@ def get_co2_water(the_data,the_product, lang_var):
         the_co2_message, the_water_message = 'not found', 'not found'
     return the_co2_message, the_water_message
 
+def crawl_query(query):
+    try:#Exception handling
+        req = r.get(f"https://www.bing.com/search?q={query}",
+                     headers = {"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
+        result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
+
+        if req.status_code == 200: #Status code 200 indicates a successful request
+            bs = BeautifulSoup(req.content, features="html.parser") #converting the content/text returned by request to a BeautifulSoup object
+            search_result = bs.find_all("li", class_="b_algo") #'b_algo' is the class of the list object which represents a single result
+            search_result = [str(i).replace("<strong>","") for i in search_result] #removing the <strong> tag
+            search_result = [str(i).replace("</strong>","") for i in search_result] #removing the </strong> tag
+            result_df = pd.DataFrame() #Initializing the data frame that stores the results
+
+            for n,i in enumerate(search_result): #iterating through the search results
+                individual_search_result = BeautifulSoup(i, features="html.parser") #converting individual search result into a BeautifulSoup object
+                h2 = individual_search_result.find('h2') #Finding the title of the individual search result
+                href = h2.find('a').get('href') #title's URL of the individual search result
+                cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
+                url_txt = h2.find('a').text #title's text of the individual search result
+                #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
+                description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
+                #Appending the result data frame after processing each individual search result
+                result_df = result_df.append(pd.DataFrame({"Title": url_txt, "URL": href, "Description": description}, index=[n]))
+                count_str = f'<b style="font-size:20px;">Bing Search returned {len(result_df)} results</b>'
+                ########################################################
+                ######### HTML code to display search results ##########
+                ########################################################
+                result_str += f'<tr style="border: none;"><h3><a href="{href}" target="_blank">{url_txt}</a></h3></tr>'+\
+                f'<tr style="border: none;"><strong style="color:green;">{cite}</strong></tr>'+\
+                f'<tr style="border: none;">{description}</tr>'+\
+                f'<tr style="border: none;"><td style="border: none;"></td></tr>'
+            result_str += '</table></html>'
+
+        #if the status code of the request isn't 200, then an error message is displayed along with an empty data frame
+        else:
+            result_df = pd.DataFrame({"Title": "", "URL": "", "Description": ""}, index=[0])
+            result_str = '<html></html>'
+            count_str = '<b style="font-size:20px;">Looks like an error!!</b>'
+
+    #if an exception is raised, then an error message is displayed along with an empty data frame
+    except:
+        result_df = pd.DataFrame({"Title": "", "URL": "", "Description": ""}, index=[0])
+        result_str = '<html></html>'
+        count_str = '<b style="font-size:20px;">Looks like an error!!</b>'
+
+    return result_df, result_str, count_str
+
 if lang_var=='UK':
     dict_screen={"selectBox1":"OBJECT name - chose the right one",
                  "textInput1":"BRAND",
@@ -143,6 +190,7 @@ if lang_var=='UK':
                  "textInput2":'NOT FOUND !',
                  "textInput3": "object age (years)",
                  "button1": "let's find repairs! 🧠 ",
+                 "button2": "Best websites to find repair 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT',
                  "textInput5":'# FAILED OBJECTS',
                  "textInput6":'MEAN AGE (years)',
@@ -158,6 +206,7 @@ elif lang_var=='FR':
                  "textInput2":'PAS TROUVé !',
                  "textInput3": "Age de ton objet (en années)",
                  "button1": "Allons trouver si c'est réparable ! 🧠 ",
+                 "button2": "Le meilleur du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES',
                  "textInput5": "NOMBRE D'OBJETS EN PANNE",
                  "textInput6": "AGE MOYEN (années)",
@@ -259,7 +308,19 @@ if st.button(dict_screen["button1"]):
             st.write('INFORMATION MANQUANTE')
         else:
             st.write ('error')
-st.write("                                                                                                                                           ")
+
+if st.button(dict_screen["button2"]):
+    if lang_var == 'UK':
+        query='repair {} {}'.format(my_final_object, my_final_brand).replace(' ','+')
+    elif lang_var == 'FR':
+        query='réparation {} {}'.format(my_final_object, my_final_brand).replace(' ','+')
+    result_df, result_str, count_str=crawl_query(query)
+    st.markdown(f'{count_str}', unsafe_allow_html=True)
+    st.markdown(f'{result_str}', unsafe_allow_html=True)
+    st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
+    st.dataframe(result_df)
+
+st.write("-----------------------------------------------")                                                                                                                                           ")
 
 from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')
@@ -298,6 +359,7 @@ if st.button(dict_screen["textInput10"]):
     st.markdown(contact_form, unsafe_allow_html=True)
     local_css("style/style.css")
 
+st.caption('Version 16/11/2022')
 if lang_var=='UK':
     st.caption('data source is : https://openrepair.org/open-data/downloads/')
     st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')

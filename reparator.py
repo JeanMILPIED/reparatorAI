@@ -320,7 +320,7 @@ if st.button(dict_screen["button2"]):
     st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
     st.dataframe(result_df)
 
-st.write("-----------------------------------------------")                                                                                                                                           ")
+st.write("-----------------------------------------------")
 
 from PIL import Image
 PD_img= Image.open('Produits-Durables_logo.png')

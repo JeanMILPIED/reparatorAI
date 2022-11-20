@@ -16,14 +16,14 @@ lang_var = col11.radio("Language",('UK','FR'))
 if lang_var=='UK':
     #col10.image('Mr_reparator.png')
     col10.title('🔮🧠😻🌎')
-    col11.text('we will tell you if you can repair. for free, of course')
+    col11.write('we will tell you if you can repair. For free, of course')
     col10.subheader(' 🚀 free.open.share 🚀')
     st.write('')
     st.subheader('Can anybody repair my machine please ? 😰')
 
 elif lang_var=='FR':
     # col10.image('Mr_reparator.png')
-    col11.text("le seul site à te dire si ça se répare. Et c'est gratuit")
+    col11.write("le seul site à te dire si ça se répare. Et c'est gratuit")
     col10.title('🔮🧠😻🌎')
     col10.subheader(' 🚀 libre.ouvert.partage 🚀')
     st.write('')

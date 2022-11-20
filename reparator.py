@@ -7,6 +7,7 @@ import pathlib
 from bs4 import BeautifulSoup
 import logging
 import shutil
+import requests as r
 
 col10, col11=st.columns(2)
 col11.title('REPARATOR.AI ')

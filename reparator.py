@@ -184,7 +184,7 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
  'Instrument de musique', 'Vidéo projecteur', 'Accessoire PC', 'Climatiseur / déshumidificateur', 'Ventilateur', 'Console de jeux vidéo']
 
 
-my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202110.csv')
+my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202204.csv')
 #my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_final_object=''

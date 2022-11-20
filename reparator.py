@@ -138,10 +138,8 @@ def get_co2_water(the_data,the_product, lang_var):
     return the_co2_message, the_water_message
 
 def crawl_query(query):
-    st.write(query)
     req = requests.get(f"https://www.bing.com/search?q={query}", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
     result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
-    st.write(result_str)
     if req.status_code == 200: #Status code 200 indicates a successful request
         bs = BeautifulSoup(req.content, features="html.parser") #converting the content/text returned by request to a BeautifulSoup object
         search_result = bs.find_all("li", class_="b_algo") #'b_algo' is the class of the list object which represents a single result

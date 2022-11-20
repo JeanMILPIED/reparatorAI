@@ -305,14 +305,14 @@ if st.button(dict_screen["button1"]):
 
 if st.button(dict_screen["button2"]):
     if lang_var == 'UK':
-        query='repair {} {}'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='repair {} {} fixit tutorial'.format(my_final_object, my_final_brand).replace(' ','+')
     elif lang_var == 'FR':
-        query='réparation {} {}'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='réparation {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand).replace(' ','+')
     result_df, result_str, count_str=crawl_query(query)
     st.markdown(f'{count_str}', unsafe_allow_html=True)
     st.markdown(f'{result_str}', unsafe_allow_html=True)
-    st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
-    st.dataframe(result_df)
+    #st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
+    #st.dataframe(result_df)
 
 st.write("-----------------------------------------------")
 

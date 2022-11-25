@@ -49,6 +49,12 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
         st.write('error')
     my_useful_dataset = my_dataset
     my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
+    my_dataset_brand=my_dataset[my_dataset['brand_ok']==my_brand]
+    if my_dataset_brand.shape[0]>0:
+        my_percent_of_repair_brand = round(
+            my_dataset_brand[my_dataset_brand['repair_status'] == 'Fixed'].shape[0] / my_dataset_brand.shape[0], 2)
+    else:
+        my_percent_of_repair_brand='not found'
     if my_useful_dataset.shape[0]>0:
         my_percent_of_repair_product = round(
             my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset.shape[0], 2)
@@ -86,7 +92,7 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
    
-    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, the_message
+    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, my_percent_of_repair_brand, the_message
 
 def find_in_list(the_string, the_list):
     results=[]
@@ -253,7 +259,7 @@ my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=Non
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
     try:
-        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
         if lang_var=="UK":
             st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
             st.subheader(the_message)
@@ -289,7 +295,9 @@ if col1.button(dict_screen["button1"]):
             if ((my_percent_of_repair_product != 'not found') & (my_own_pc_repair != 'not found')):
                 st.metric(dict_screen["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
                             delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
-        #         #we save logs
+            if (my_percent_of_repair_brand != 'not found'):
+                st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
+    #         #we save logs
     #         this_is_now=datetime.now()
     #         list_info=[this_is_now,my_final_object, my_final_brand, my_age]
     #         with open('reparator_logs.csv', 'a', newline='\n') as f:

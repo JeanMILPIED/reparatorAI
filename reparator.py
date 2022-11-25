@@ -9,24 +9,19 @@ import logging
 import shutil
 import requests
 
-col10, col11=st.columns(2)
+col10, col11, col12=st.columns([2,3,1])
+lang_var = col12.radio("",('UK','FR'))
 col11.title('REPARATOR.AI ')
 
-lang_var = col11.radio("Language",('UK','FR'))
-
 if lang_var=='UK':
-    #col10.image('Mr_reparator.png')
-    col10.title('🔮🧠😻🌎')
-    col11.write('we will tell you if you can repair. For free, of course')
-    col10.subheader(' 🚀 free.open.share 🚀')
+    col10.title('🔮🧠😻🌎🛠🙏')
+    col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
     st.write('')
     st.subheader('Can anybody repair my machine please ? 😰')
 
 elif lang_var=='FR':
-    # col10.image('Mr_reparator.png')
-    col11.write("le seul site à te dire si ça se répare. Et c'est gratuit")
-    col10.title('🔮🧠😻🌎')
-    col10.subheader(' 🚀 libre.ouvert.partage 🚀')
+    col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
+    col10.title('🔮🧠😻🌎🛠🙏')
     st.write('')
     st.subheader('Mon équipement est-il réparable ? 😰')
 
@@ -36,6 +31,14 @@ else:
 def local_css(filename):
     with open(filename) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+def clean_df(df):
+    df_ok=df[df.year_of_manufacture>1950]
+    my_brand_low_freq=df_ok.brand.value_counts()[df_ok.brand.value_counts()<10].index.tolist()
+    df_ok=df_ok[df_ok.brand.isin(my_brand_low_freq)==False]
+    df_ok=df_ok[df_ok.repair_status!='Unknown']
+    df_ok['repair_barrier_if_end_of_life']=df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
+    return df_ok
 
 def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     if lang_var=='UK':
@@ -178,9 +181,9 @@ def crawl_query(query):
 if lang_var=='UK':
     dict_screen={"selectBox1":"OBJECT name - chose the right one",
                  "textInput1":"BRAND",
-                 "selectBox2":'chose the right one',
+                 "selectBox2":'the BRAND',
                  "textInput2":'NOT FOUND !',
-                 "textInput3": "object age (years)",
+                 "textInput3": "the AGE (years)",
                  "button1": "let's find repairs! 🧠 ",
                  "button2": "Best websites to find repair 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT',
@@ -192,11 +195,11 @@ if lang_var=='UK':
                  "textInput10":"Send me a comment! 🦄",
                  "textInput11":"French Actors for Repair 🚀"}
 elif lang_var=='FR':
-    dict_screen={"selectBox1":"Type d'Objet - Quel est le tien ?",
+    dict_screen={"selectBox1":"L'OBJET que tu souhaites réparer ",
                  "textInput1":"MARQUE",
-                 "selectBox2":'Choisis dans la liste',
+                 "selectBox2":"la MARQUE",
                  "textInput2":'PAS TROUVé !',
-                 "textInput3": "Age de ton objet (en années)",
+                 "textInput3": "Quel AGE a-t-il ? (en années)",
                  "button1": "Allons trouver si c'est réparable ! 🧠 ",
                  "button2": "Le meilleur du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES',
@@ -225,11 +228,12 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
  'Bouilloir', 'Fer à repasser', 'Appareil photo numérique', 'Imprimante / scanner', 'Ordinateur portable', 'Hi-Fi', 'Broyeuse à papier',
  'Grille pains', 'Ecran plat', 'Téléphone portable', 'Tablette', 'Camescope', 'Ecouteurs', 'Gros électroménager',
  'Instrument de musique', 'Vidéo projecteur', 'Accessoire PC', 'Climatiseur / déshumidificateur', 'Ventilateur', 'Console de jeux vidéo']
-
+selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
 
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202204.csv')
-#my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
+my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
+my_data=clean_df(my_data)
 my_final_object=''
 my_final_brand=''
 
@@ -237,19 +241,13 @@ my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
 if lang_var=='UK':
-    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_UK))
+    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK)))
 elif lang_var=='FR':
-    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_FR))
+    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR)))
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
-col3, col4=st.columns(2)
-my_brand=col3.text_input(dict_screen["textInput1"], value="", max_chars=None, key=None, type="default")
-my_final_brand, my_final_brand_best_results=find_in_list(my_brand, pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist())
-if my_final_brand !='not found':
-    my_final_brand = col4.selectbox(dict_screen["selectBox2"], tuple(my_final_brand_best_results))
-else:
-    col4.write(dict_screen["textInput2"])
 
+my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist()))
 my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
 
 if st.button(dict_screen["button1"]):

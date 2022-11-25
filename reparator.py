@@ -157,23 +157,24 @@ def crawl_query(query):
         result_df = pd.DataFrame() #Initializing the data frame that stores the results
 
         for n,i in enumerate(search_result): #iterating through the search results
-            individual_search_result = BeautifulSoup(i, features="html.parser") #converting individual search result into a BeautifulSoup object
-            h2 = individual_search_result.find('h2') #Finding the title of the individual search result
-            href = h2.find('a').get('href') #title's URL of the individual search result
-            cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
-            url_txt = h2.find('a').text #title's text of the individual search result
-            #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
-            description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
-            #Appending the result data frame after processing each individual search result
-            result_df = result_df.append(pd.DataFrame({"Title": url_txt, "URL": href, "Description": description}, index=[n]))
-            count_str = f'<b style="font-size:20px;">Bing Search returned {len(result_df)} results</b>'
-            ########################################################
-            ######### HTML code to display search results ##########
-            ########################################################
-            result_str += f'<tr style="border: none;"><h3><a href="{href}" target="_blank">{url_txt}</a></h3></tr>'+\
-            f'<tr style="border: none;"><strong style="color:green;">{cite}</strong></tr>'+\
-            f'<tr style="border: none;">{description}</tr>'+\
-            f'<tr style="border: none;"><td style="border: none;"></td></tr>'
+            if n<=10:
+                individual_search_result = BeautifulSoup(i, features="html.parser") #converting individual search result into a BeautifulSoup object
+                h2 = individual_search_result.find('h2') #Finding the title of the individual search result
+                href = h2.find('a').get('href') #title's URL of the individual search result
+                cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
+                url_txt = h2.find('a').text #title's text of the individual search result
+                #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
+                description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
+                #Appending the result data frame after processing each individual search result
+                result_df = result_df.append(pd.DataFrame({"Title": url_txt, "URL": href, "Description": description}, index=[n]))
+                count_str = f'<b style="font-size:12px;">Search returned {len(result_df)} results</b>'
+                ########################################################
+                ######### HTML code to display search results ##########
+                ########################################################
+                description=description[:200]+'...'
+                result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr>'+\
+                f'<tr style="border: none;"><h7>{description}</h7></tr>'+\
+                f'<tr style="border: none;"><h6>{"                                   "}</h6></tr>'
         result_str += '</table></html>'
 
     #if the status code of the request isn't 200, then an error message is displayed along with an empty data frame
@@ -313,9 +314,9 @@ if col1.button(dict_screen["button1"]):
 
 if col2.button(dict_screen["button2"]):
     if lang_var == 'UK':
-        query='repair {} {} fixit tutorial'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='repair {} {} fixit tutorial Youtube'.format(my_final_object, my_final_brand).replace(' ','+')
     elif lang_var == 'FR':
-        query='réparation {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='réparation {} {} tuto comment faire réparer Spareka Youtube'.format(my_final_object, my_final_brand).replace(' ','+')
     try:
         result_df, result_str, count_str=crawl_query(query)
         st.markdown(f'{count_str}', unsafe_allow_html=True)

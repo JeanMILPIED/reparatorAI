@@ -9,19 +9,20 @@ import logging
 import shutil
 import requests
 
+st.image("bannerTop.jpg")
 col10, col11, col12=st.columns([2,3,1])
 lang_var = col12.radio("",('UK','FR'))
 col11.title('REPARATOR.AI ')
 
 if lang_var=='UK':
-    col10.title('🔮🧠😻🌎🛠🙏')
+    col10.image("left_illustration.jpg", width=170)
     col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
     st.write('')
     st.subheader('Can anybody repair my machine please ? 😰')
 
 elif lang_var=='FR':
     col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
-    col10.title('🔮🧠😻🌎🛠🙏')
+    col10.image("left_illustration.jpg", width=170)
     st.write('')
     st.subheader('Mon objet est-il réparable ? 😰')
 
@@ -174,7 +175,7 @@ def crawl_query(query):
                 description=description[:200]+'...'
                 result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr>'+\
                 f'<tr style="border: none;"><h7>{description}</h7></tr>'+\
-                f'<tr style="border: none;"><h6>{"                                   "}</h6></tr>'
+                f'<tr style="border: none;"><h6>{"                                   fla"}</h6></tr>'
         result_str += '</table></html>'
 
     #if the status code of the request isn't 200, then an error message is displayed along with an empty data frame
@@ -375,6 +376,8 @@ elif lang_var=='FR':
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
 else:
     st.write ('error')
+
+st.image("bannerBottom.jpg")
 
 #insert the google analytics or stat_counter
 GA_JS = """

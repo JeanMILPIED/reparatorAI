@@ -374,7 +374,7 @@ elif lang_var=='FR':
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
 else:
     st.write ('error')
-
+st.caption("Banner images generated with https://lexica.art")
 st.image("bannerBottom.jpg")
 
 #insert the google analytics or stat_counter

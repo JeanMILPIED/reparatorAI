@@ -10,19 +10,17 @@ import shutil
 import requests
 
 st.image("bannerTop.jpg")
-col10, col11, col12=st.columns([2,3,1])
+col10, col11, col12=st.columns([1,20,4])
 lang_var = col12.radio("",('UK','FR'))
 col11.title('REPARATOR.AI ')
 
 if lang_var=='UK':
-    col10.image("left_illustration.jpg", width=170)
     col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
     st.write('')
     st.subheader('Can anybody repair my machine please ? 😰')
 
 elif lang_var=='FR':
     col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
-    col10.image("left_illustration.jpg", width=170)
     st.write('')
     st.subheader('Mon objet est-il réparable ? 😰')
 

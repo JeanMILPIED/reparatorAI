@@ -11,7 +11,7 @@ import requests
 
 st.image("bannerTop.jpg")
 col10, col11, col12=st.columns([1,20,4])
-lang_var = col12.radio("",('UK','FR'))
+lang_var = col12.radio("",('FR','UK'))
 col11.title('REPARATOR.AI ')
 
 if lang_var=='UK':

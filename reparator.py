@@ -70,22 +70,22 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
         if my_number_of_machine_brand>10:
             if my_percent_of_repair >0.5:
                 if lang_var=='UK':
-                    the_message='Run to repair ! 😍'
+                    the_message=' 😍 Run to repair !'
                 elif lang_var=='FR':
-                    the_message='Cours le faire réparer ! 😍'
+                    the_message=' 😍 Cours le faire réparer !'
                 else: st.write('error')
             elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
                 if lang_var=='UK':
-                    the_message='You should try to repair it 😙'
+                    the_message='😙 You should try to repair it'
                 elif lang_var=='FR':
-                    the_message = "Ca vaut le coup d'essayer de le réparer 😙"
+                    the_message = " 😙 Ca vaut le coup d'essayer de le réparer"
                 else:
                     st.write('error')
             else:
                 if lang_var=='UK':
-                    the_message='Contact an expert! 😎'
+                    the_message='😎 Contact an expert!'
                 elif lang_var=='FR':
-                    the_message = 'Il te faut un expert de la réparation! 😎'
+                    the_message = '😎 Il te faut un expert de la réparation!'
                 else:
                     st.write('error')
     else:
@@ -112,11 +112,12 @@ def find_in_list(the_string, the_list):
         proper_value='not found'
     return proper_value, results
 
-def get_co2_water(the_data,the_product, lang_var):
+def get_co2_water_bonus(the_data,the_product, lang_var):
     the_usefull_data=the_data[the_data.product_category==the_product]
     if lang_var=='UK':
         the_co2=str(the_usefull_data.CO2e.iloc[0]).replace(',',' to ')
         the_water=str(the_usefull_data.water_L.iloc[0]).replace(',',' to ')
+        the_bonus='NO'
         if 'TBD' in the_co2:
             the_co2_message = "CO2: no data on CO2 yet 🙄"
         else:
@@ -127,9 +128,11 @@ def get_co2_water(the_data,the_product, lang_var):
         else:
             the_water_message = "WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
                 str(the_water)[1:-1])
+        the_bonus_message=""
     elif lang_var=='FR':
         the_co2 = str(the_usefull_data.CO2e.iloc[0]).replace(',', ' à ')
         the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' à ')
+        the_bonus= str(the_usefull_data.Bonus_euros.iloc[0])
         if 'TBD' in the_co2:
             the_co2_message = "CO2: pas encore de data dispo 🙄"
         else:
@@ -141,9 +144,13 @@ def get_co2_water(the_data,the_product, lang_var):
         else:
             the_water_message = "EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
                 str(the_water)[1:-1])
+        if the_bonus!='':
+            the_bonus_message="🥳 Bonus d'état de {} euros*".format(the_bonus)
+        else:
+            "Cette réparation n'est pas encore élligible au bonus détat"
     else:
-        the_co2_message, the_water_message = 'not found', 'not found'
-    return the_co2_message, the_water_message
+        the_co2_message, the_water_message, the_bonus_message = 'not found', 'not found', "not found"
+    return the_co2_message, the_water_message, the_bonus_message
 
 def crawl_query(query):
     req = requests.get(f"https://www.bing.com/search?q={query}", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
@@ -213,7 +220,7 @@ elif lang_var=='FR':
                  "textInput6": "AGE MOYEN (années)",
                  "textInput7": "% DES REPARATIONS REUSSIES",
                  "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE MIEN",
-                 "textInput9": "% DES REPARATIONS REUSSIES DANS CETTE CATEGORIE {}",
+                 "textInput9": "% DES REPARATIONS REUSSIES DE {}",
                  "textInput10": "Envois-moi un avis! 🦄",
                  "textInput11": "Les acteurs Français de la réparation 🚀"
                  }
@@ -260,13 +267,16 @@ col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
+        the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
         if lang_var=="UK":
             st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
             st.subheader(the_message)
+            st.subheader(the_bonus_message)
         elif lang_var=='FR':
             st.subheader('pour {} {} de {} ans'.format(my_final_object_FR, my_final_brand, my_age))
             st.subheader(the_message)
-        the_co2_message, the_water_message=get_co2_water(my_co2_w_data,my_final_object, lang_var)
+            st.subheader(the_bonus_message)
+            st.caption("* retrouvez toutes les informations sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes")
         st.write(the_co2_message)
         st.write(the_water_message)
 
@@ -297,12 +307,7 @@ if col1.button(dict_screen["button1"]):
                             delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
             if (my_percent_of_repair_brand != 'not found'):
                 st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
-    #         #we save logs
-    #         this_is_now=datetime.now()
-    #         list_info=[this_is_now,my_final_object, my_final_brand, my_age]
-    #         with open('reparator_logs.csv', 'a', newline='\n') as f:
-    #             writer =csv.writer(f)
-    #             writer.writerow(list_info)
+
     except:
         if lang_var=='UK':
             st.write('MISSING INFO')

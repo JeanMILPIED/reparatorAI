@@ -70,22 +70,22 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
         if my_number_of_machine_brand>10:
             if my_percent_of_repair >0.5:
                 if lang_var=='UK':
-                    the_message=' 😍 Run to repair !'
+                    the_message=' 😍 YES! Run to repair !'
                 elif lang_var=='FR':
-                    the_message=' 😍 Cours le faire réparer !'
+                    the_message=' 😍 OUI! Cours le faire réparer !'
                 else: st.write('error')
             elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
                 if lang_var=='UK':
-                    the_message='😙 You should try to repair it'
+                    the_message='😙 YES! You should try to repair it'
                 elif lang_var=='FR':
-                    the_message = " 😙 Ca vaut le coup d'essayer de le réparer"
+                    the_message = " 😙 OUI! Ca vaut le coup d'essayer de le réparer"
                 else:
                     st.write('error')
             else:
                 if lang_var=='UK':
-                    the_message='😎 Contact an expert!'
+                    the_message='😎 YES, but you need an expert!'
                 elif lang_var=='FR':
-                    the_message = '😎 Il te faut un expert de la réparation!'
+                    the_message = '😎 OUI, mais il te faut un expert de la réparation!'
                 else:
                     st.write('error')
     else:
@@ -145,15 +145,15 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
             the_water_message = "EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
                 str(the_water)[1:-1])
         if the_bonus!='nan':
-            the_bonus_message="🥳 Bonus d'état de {} euros*".format(the_bonus)
+            the_bonus_message="🥳 Eligible au bonus d'état réparation de {} euros*".format(the_bonus)
         else:
-            the_bonus_message="Cette réparation n'est pas encore élligible au bonus d'état*"
+            the_bonus_message="Cette réparation n'est pas encore éligible au bonus d'état*"
     else:
         the_co2_message, the_water_message, the_bonus_message = 'not found', 'not found', "not found"
     return the_co2_message, the_water_message, the_bonus_message
 
 def crawl_query(query):
-    req = requests.get(f"https://www.bing.com/search?q={query}", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
+    req = requests.get(f"https://www.bing.com/search?q={query}"+"&answerCount=5&promote=webpages%2Cvideos", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
     result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
     if req.status_code == 200: #Status code 200 indicates a successful request
         bs = BeautifulSoup(req.content, features="html.parser") #converting the content/text returned by request to a BeautifulSoup object
@@ -180,7 +180,7 @@ def crawl_query(query):
                 description=description[:200]+'...'
                 result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr>'+\
                 f'<tr style="border: none;"><h7>{description}</h7></tr>'+\
-                f'<tr style="border: none;"><h6>{"                                   fla"}</h6></tr>'
+                f'<tr style="border: none;"><h6>{""}</h6></tr>'
         result_str += '</table></html>'
 
     #if the status code of the request isn't 200, then an error message is displayed along with an empty data frame
@@ -197,7 +197,7 @@ if lang_var=='UK':
                  "selectBox2":'The BRAND',
                  "textInput2":'NOT FOUND !',
                  "textInput3": "the AGE (years)",
-                 "button1": "Let's find repairs! 🧠 ",
+                 "button1": "Let's find repairs! 🛠 ",
                  "button2": "Best repair tutorials on the web 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT in our database',
                  "textInput5":'# FAILED {} {}',
@@ -205,15 +205,15 @@ if lang_var=='UK':
                  "textInput7": 'REPAIR SUCCESS RATE (%)',
                  "textInput8":'# {} {} OF SAME AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR {}',
-                 "textInput10":"Send me a comment! 🦄",
-                 "textInput11":"French Actors for Repair 🚀"}
+                 "textInput10":"🦄 Send me a comment!",
+                 "textInput11":"🐓 French Actors for Repair"}
 elif lang_var=='FR':
     dict_screen={"selectBox1":"L'OBJET que tu souhaites réparer ",
                  "textInput1":"MARQUE",
                  "selectBox2":"La MARQUE",
                  "textInput2":'PAS TROUVé !',
                  "textInput3": "Quel AGE a-t-il ? (en années)",
-                 "button1": "Voyons si c'est réparable ! 🧠 ",
+                 "button1": "Voyons si c'est réparable ! 🛠 ",
                  "button2": "Les meilleurs Tutos du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES dans notre database',
                  "textInput5": "NOMBRE DE {} {} EN PANNE",
@@ -221,8 +221,8 @@ elif lang_var=='FR':
                  "textInput7": "% DES REPARATIONS REUSSIES",
                  "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE TIEN",
                  "textInput9": "% DES REPARATIONS REUSSIES DE {}",
-                 "textInput10": "Envois-moi un avis! 🦄",
-                 "textInput11": "Les acteurs Français de la réparation 🚀"
+                 "textInput10": " 🦄 Envois-moi un avis!",
+                 "textInput11": " 🐓 Les acteurs Français de la réparation"
                  }
 selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
  'PORTABLE RADIO', 'HANDHELD ENTERTAINMENT DEVICE', 'FOOD PROCESSOR', 'SMALL HOME ELECTRICAL',
@@ -238,7 +238,7 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
  'Lampe', 'Radio portable', 'Appareil de divertissement portable', 'Robot de cuisine', 'Petit électroménager de maison',
  'équipement pour cheveux & beauté', 'Divers', 'Machine à coudre', 'Montre / Réveil', 'Composants HI-Fi', 'Ordinateur de Bureau',
  'Batterie / chargeur / adaptateur', 'Petit électroménager de cuisine', 'Aspirateur', 'accessoire TV et jeux videos', 'Machine à café',
- 'Bouilloir', 'Fer à repasser', 'Appareil photo numérique', 'Imprimante / scanner', 'Ordinateur portable', 'Hi-Fi', 'Broyeuse à papier',
+ 'Bouilloire', 'Fer à repasser', 'Appareil photo numérique', 'Imprimante / scanner', 'Ordinateur portable', 'Hi-Fi', 'Broyeuse à papier',
  'Grille pains', 'Ecran plat', 'Téléphone portable', 'Tablette', 'Camescope', 'Ecouteurs', 'Gros électroménager',
  'Instrument de musique', 'Vidéo projecteur', 'Accessoire PC', 'Climatiseur / déshumidificateur', 'Ventilateur', 'Console de jeux vidéo']
 selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
@@ -270,11 +270,11 @@ if col1.button(dict_screen["button1"]):
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
         if lang_var=="UK":
-            st.subheader('for {} {} of {} years old'.format(my_final_object, my_final_brand, my_age))
+            st.subheader('Worth trying to repair the {} {} of {} years old ?'.format(my_final_object, my_final_brand, my_age))
             st.subheader(the_message)
             st.subheader(the_bonus_message)
         elif lang_var=='FR':
-            st.subheader('pour {} {} de {} ans'.format(my_final_object_FR, my_final_brand, my_age))
+            st.subheader('Réparer le/la {} {} de {} ans, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age))
             st.subheader(the_message)
             st.subheader(the_bonus_message)
             st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
@@ -319,9 +319,10 @@ if col1.button(dict_screen["button1"]):
 
 if col2.button(dict_screen["button2"]):
     if lang_var == 'UK':
-        query='repair {} {} fixit tutorial Youtube'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='repair {} {} fixit tutorial'.format(my_final_object, my_final_brand).replace(' ','+')
     elif lang_var == 'FR':
-        query='réparation {} {} tuto comment faire réparer Spareka Youtube'.format(my_final_object, my_final_brand).replace(' ','+')
+        my_final_object=my_final_object_FR
+        query='réparation {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand).replace(' ','+')
     try:
         result_df, result_str, count_str=crawl_query(query)
         st.markdown(f'{count_str}', unsafe_allow_html=True)
@@ -385,42 +386,9 @@ st.caption("Banner images generated with https://lexica.art")
 
 
 #insert the google analytics or stat_counter
-GA_JS = """
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MGD4ES78W6"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-MGD4ES78W6');
-    </script>
-    """
-
 SC_JS="""
 <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>
 """
-
-def inject_ga(GA_JS):
-    GA_ID = "google_analytics"
-
-    # Note: Please replace the id from G-XXXXXXXXXX to whatever your
-    # web application's id is. You will find this in your Google Analytics account
-    
-    # Insert the script in the head tag of the static template inside your virtual
-    index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
-    logging.info(f'editing {index_path}')
-    soup = BeautifulSoup(index_path.read_text(), features="html.parser")
-    if not soup.find(id=GA_ID):  # if cannot find tag
-        bck_index = index_path.with_suffix('.bck')
-        if bck_index.exists():
-            shutil.copy(bck_index, index_path)  # recover from backup
-        else:
-            shutil.copy(index_path, bck_index)  # keep a backup
-        html = str(soup)
-        new_html = html.replace('<head>', '<head>\n' + GA_JS)
-        index_path.write_text(new_html)
-
-#inject_ga()
 st.components.v1.html(SC_JS)
 
 

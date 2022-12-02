@@ -41,9 +41,9 @@ def clean_df(df):
 
 def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     if lang_var=='UK':
-        the_message='Oups too few data for reparatorAI to answer 🙄'
+        the_message=' 🙄 Sorry, too few data to answer'
     elif lang_var=='FR':
-        the_message = 'Oups pas assez de données pour que reparatorAI te réponde 🙄'
+        the_message = ' 🙄 Désolé, pas assez de data pour te répondre'
     else:
         st.write('error')
     my_useful_dataset = my_dataset
@@ -144,10 +144,10 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
         else:
             the_water_message = "EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
                 str(the_water)[1:-1])
-        if the_bonus!='':
+        if the_bonus!='nan':
             the_bonus_message="🥳 Bonus d'état de {} euros*".format(the_bonus)
         else:
-            "Cette réparation n'est pas encore élligible au bonus détat"
+            the_bonus_message="Cette réparation n'est pas encore élligible au bonus d'état*"
     else:
         the_co2_message, the_water_message, the_bonus_message = 'not found', 'not found', "not found"
     return the_co2_message, the_water_message, the_bonus_message
@@ -199,9 +199,9 @@ if lang_var=='UK':
                  "textInput3": "the AGE (years)",
                  "button1": "Let's find repairs! 🧠 ",
                  "button2": "Best repair tutorials on the web 🚀",
-                 "textInput4":'THE STATISTICS BEHIND IT',
+                 "textInput4":'THE STATISTICS BEHIND IT in our database',
                  "textInput5":'# FAILED {} {}',
-                 "textInput6":'MEAN AGE (years)',
+                 "textInput6":'MEAN AGE of failures (years)',
                  "textInput7": 'REPAIR SUCCESS RATE (%)',
                  "textInput8":'# {} {} OF SAME AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR {}',
@@ -215,11 +215,11 @@ elif lang_var=='FR':
                  "textInput3": "Quel AGE a-t-il ? (en années)",
                  "button1": "Voyons si c'est réparable ! 🧠 ",
                  "button2": "Les meilleurs Tutos du Web 🚀",
-                 "textInput4": 'STATISTIQUES DE PANNES',
+                 "textInput4": 'STATISTIQUES DE PANNES dans notre database',
                  "textInput5": "NOMBRE DE {} {} EN PANNE",
-                 "textInput6": "AGE MOYEN (années)",
+                 "textInput6": "AGE MOYEN des pannes (années)",
                  "textInput7": "% DES REPARATIONS REUSSIES",
-                 "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE MIEN",
+                 "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE TIEN",
                  "textInput9": "% DES REPARATIONS REUSSIES DE {}",
                  "textInput10": "Envois-moi un avis! 🦄",
                  "textInput11": "Les acteurs Français de la réparation 🚀"
@@ -265,6 +265,7 @@ my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=Non
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
+    st.write('-----------------------------------')
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
@@ -276,7 +277,7 @@ if col1.button(dict_screen["button1"]):
             st.subheader('pour {} {} de {} ans'.format(my_final_object_FR, my_final_brand, my_age))
             st.subheader(the_message)
             st.subheader(the_bonus_message)
-            st.caption("* retrouvez toutes les informations sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes")
+            st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
         st.write(the_co2_message)
         st.write(the_water_message)
 
@@ -369,7 +370,8 @@ if st.button(dict_screen["textInput10"]):
     st.markdown(contact_form, unsafe_allow_html=True)
     local_css("style/style.css")
 
-st.caption('Version 16/11/2022')
+st.image("bannerBottom.jpg")
+st.caption('Version 02/12/2022')
 if lang_var=='UK':
     st.caption('data source is : https://openrepair.org/open-data/downloads/')
     st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
@@ -380,7 +382,7 @@ elif lang_var=='FR':
 else:
     st.write ('error')
 st.caption("Banner images generated with https://lexica.art")
-st.image("bannerBottom.jpg")
+
 
 #insert the google analytics or stat_counter
 GA_JS = """

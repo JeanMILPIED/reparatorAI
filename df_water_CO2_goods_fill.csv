@@ -20,10 +20,10 @@ Iron,"['TBD', 'TBD']","['TBD', 'TBD']",10
 Kettle,[9.9],"['TBD', 'TBD']",10
 Lamp,"['TBD', 'TBD']","['TBD', 'TBD']",
 Laptop,"[156, 349]","[4000,6000]",45
-Large home electrical,"['TBD', 'TBD']","['TBD', 'TBD']",
+Large home electrical,"['TBD', 'TBD']","['TBD', 'TBD']", 25
 Misc,"['TBD', 'TBD']","['TBD', 'TBD']",
 Mobile,"[16, 74]","[500, 1500]",25
-Musical instrument,"['TBD', 'TBD']","['TBD', 'TBD']",
+Musical instrument,"['TBD', 'TBD']","['TBD', 'TBD']",15
 PC Accessory,"[222, 248]","['TBD', 'TBD']",
 Paper shredder,"['TBD', 'TBD']","['TBD', 'TBD']",
 Portable radio,"[2,7]","['TBD', 'TBD']",20

@@ -10,12 +10,12 @@ https://monindicedereparabilite.fr/distributers
 https://www.ecologie.gouv.fr/indice-reparabilite  
 https://www.indicereparabilite.fr/  
 
-Par constructeur/fabriquant, exemple:  
+- Par constructeur/fabriquant, exemple:  
 https://support.apple.com/fr-fr/circular-economy-repairability-indices  
 
 - sur le bonus réparation  
 https://www.ecologie.gouv.fr/lancement-du-bonus-reparation-appareils-electriques-et-electroniques  
- https://www.ecosystem.eco/fr/article/bonus-reparation  
+https://www.ecosystem.eco/fr/article/bonus-reparation  
 
 
 ### English zone here  🤘

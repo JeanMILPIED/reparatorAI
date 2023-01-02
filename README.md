@@ -13,7 +13,7 @@ C'est évidemment gratuit !
   
 ****  
 🌱 En plus, la ptite app sympa te donne un équivalent CO2 sauvé si tu répares.  
-🌈 Et enfin, avec le bonus réparation disponible, on te donne le montant!
+🌈 Et enfin, depuis que le bonus réparation est disponible, on te donne le montant pour ton objet !
 ****  
 
 ### Mais comment est-ce possible ? 🙃  
@@ -21,6 +21,7 @@ Sous le capot, reparator.ai est branché à une base de données de réparations
 Cette BDD recense toutes les réparations réalisées dans les repair.Café et autres associations de réparations.  
 En exploitant les statistiques agglomérées sur ces quelques 50000 réparations, il est possible de savoir si un objet est réparable.  
 Voilà, tu sais tout !  
+****  
 
 ### Quelques liens bien utiles 🔥  
 - sur l'indice de réparabilité  
@@ -34,8 +35,8 @@ https://support.apple.com/fr-fr/circular-economy-repairability-indices
 - sur le bonus réparation  
 https://www.ecologie.gouv.fr/lancement-du-bonus-reparation-appareils-electriques-et-electroniques  
 https://www.ecosystem.eco/fr/article/bonus-reparation  
-
-
+  
+****  
 ### English zone here  🤘
 The tool to predict reparation success rate of 2nd hand objects !  
 link to the stats: https://statcounter.com/p12751623/visitor/

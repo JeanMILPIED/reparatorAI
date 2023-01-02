@@ -2,7 +2,8 @@
 ### L'outil qui prédit la réparabilité de tes objets  
 
 En ligne depuis 2022, la p'tite application utile qui te dit si ton objet est réparable, c'est reparator.AI.  
-C'est évidemment gratuit !  
+C'est évidemment gratuit ! 
+****   
 
 ### Comment ça marche ? 🙉  
 1. Tu indiques le type d'objet  

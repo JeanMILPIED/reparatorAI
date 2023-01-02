@@ -10,9 +10,11 @@ C'est évidemment gratuit !
 3. Tu indiques l'age de ton objet  
 4. Tu cliques sur "est-ce réparable?" et hop on te répond  
 5. Tu cliques sur "les meilleurs tutos" et hop on te donne les liens des meilleurs tutos video du web  
+  
+****  
 🌱 En plus, la ptite app sympa te donne un équivalent CO2 sauvé si tu répares.  
 🌈 Et enfin, avec le bonus réparation disponible, on te donne le montant!
-
+****  
 
 ### Mais comment est-ce possible ? 🙃  
 Sous le capot, reparator.ai est branché à une base de données de réparations publique.  

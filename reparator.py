@@ -389,8 +389,8 @@ st.caption("Banner images generated with https://lexica.art")
 # <style type="text/css">iframe { position: absolute; width: 100%; height: 100%; z-index: 999; }</style>"""
 # st.components.v1.html(DINO_web,width=None, height=300)
 
-Flight_game = """<iframe src="http://www.freeonlinegames.com/embed/145376" width="360" height="640" frameborder="no" scrolling="no"></iframe>"""
-st.components.v1.html(Flight_game,width=None, height=600)
+Flight_game = "http://www.freeonlinegames.com/embed/145376"
+st.components.v1.imframe(Flight_game, width=500, height=600)
 
 #insert the google analytics or stat_counter
 SC_JS="""

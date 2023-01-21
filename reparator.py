@@ -390,7 +390,7 @@ st.caption("Banner images generated with https://lexica.art")
 # st.components.v1.html(DINO_web,width=None, height=300)
 
 Flight_game = "http://www.freeonlinegames.com/embed/145376"
-st.components.v1.imframe(Flight_game, width=500, height=600)
+st.components.v1.iframe(Flight_game, width=500, height=600)
 
 #insert the google analytics or stat_counter
 SC_JS="""

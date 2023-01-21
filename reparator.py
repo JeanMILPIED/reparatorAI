@@ -389,7 +389,7 @@ st.caption("Banner images generated with https://lexica.art")
 # <style type="text/css">iframe { position: absolute; width: 100%; height: 100%; z-index: 999; }</style>"""
 # st.components.v1.html(DINO_web,width=None, height=300)
 
-Flight_game = "http://www.freeonlinegames.com/embed/145376"
+Flight_game = """<iframe height="167" frameborder="0" src="https://itch.io/embed/570108" width="552"><a href="https://starlane-studios.itch.io/asteroids">Asteroids Space Shooter by Starlane Studios</a></iframe>"""
 st.components.v1.iframe(Flight_game, width=500, height=600)
 
 #insert the google analytics or stat_counter

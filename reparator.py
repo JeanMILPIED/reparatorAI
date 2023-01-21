@@ -385,13 +385,6 @@ else:
     st.write ('error')
 st.caption("Banner images generated with https://lexica.art")
 
-# DINO_web="""<iframe src="https://chromedino.com/" frameborder="0" scrolling="no" width="100%" height="100%" loading="lazy"></iframe>
-# <style type="text/css">iframe { position: absolute; width: 100%; height: 100%; z-index: 999; }</style>"""
-# st.components.v1.html(DINO_web,width=None, height=300)
-
-Flight_game = """<iframe height="167" frameborder="0" src="https://itch.io/embed/570108" width="552"><a href="https://starlane-studios.itch.io/asteroids">Asteroids Space Shooter by Starlane Studios</a></iframe>"""
-st.components.v1.iframe(Flight_game, width=500, height=600)
-
 #insert the google analytics or stat_counter
 SC_JS="""
 <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>

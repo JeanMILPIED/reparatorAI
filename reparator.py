@@ -385,12 +385,20 @@ else:
     st.write ('error')
 st.caption("Banner images generated with https://lexica.art")
 
+DINO_web="""<iframe src="https://chromedino.com/" frameborder="0" scrolling="no" width="100%" height="100%" loading="lazy"></iframe>
+<style type="text/css">iframe { position: absolute; width: 100%; height: 100%; z-index: 999; }</style>"""
+st.components.v1.html(DINO_web,width=None, height=300)
+
+Flight_game = """<iframe src="http://www.freeonlinegames.com/embed/145376" width="360" height="640" frameborder="no" scrolling="no"></iframe>"""
+st.components.v1.html(Flight_game,width=None, height=600)
 
 #insert the google analytics or stat_counter
 SC_JS="""
 <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>
 """
 st.components.v1.html(SC_JS)
+
+
 
 
 

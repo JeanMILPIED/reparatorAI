@@ -17,13 +17,9 @@ col11.title('REPARATOR.AI ')
 if lang_var=='UK':
     col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
     st.write('')
-    st.subheader('Can anybody repair my machine please ? 😰')
-
 elif lang_var=='FR':
     col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
     st.write('')
-    st.subheader('Mon objet est-il réparable ? 😰')
-
 else:
     st.write('error language')
 
@@ -192,7 +188,8 @@ def crawl_query(query):
     return result_df, result_str, count_str
 
 if lang_var=='UK':
-    dict_screen={"selectBox1":"OBJECT name - chose the right one",
+    dict_screen={"selectBox0":"OBJECT Category",
+                 "selectBox1":"OBJECT name - chose the right one",
                  "textInput1":"BRAND",
                  "selectBox2":'The BRAND',
                  "textInput2":'NOT FOUND !',
@@ -206,9 +203,17 @@ if lang_var=='UK':
                  "textInput8":'# {} {} OF SAME AGE',
                  "textInput9":'REPAIRS SUCCESS RATE (%) FOR {}',
                  "textInput10":"🦄 Send me a comment!",
-                 "textInput11":"🐓 French Actors for Repair"}
+                 "textInput11":"🐓 French Actors for Repair",
+                 "textInput12":"⚠ Age is missing",
+                 "textInput13" : "Please indicate any other useful info here",
+                 "textInput14" : "About ReparatorAI 👓",
+                 "textInput15" : "Can anybody repair my machine please ? 😰",
+                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 65000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide."
+
+                 }
 elif lang_var=='FR':
-    dict_screen={"selectBox1":"L'OBJET que tu souhaites réparer ",
+    dict_screen={"selectBox0":"Catégorie de ton objet",
+                 "selectBox1":"L'objet que tu souhaites réparer ",
                  "textInput1":"MARQUE",
                  "selectBox2":"La MARQUE",
                  "textInput2":'PAS TROUVé !',
@@ -221,9 +226,18 @@ elif lang_var=='FR':
                  "textInput7": "% DES REPARATIONS REUSSIES",
                  "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE TIEN",
                  "textInput9": "% DES REPARATIONS REUSSIES DE {}",
-                 "textInput10": " 🦄 Envois-moi un avis!",
-                 "textInput11": " 🐓 Les acteurs Français de la réparation"
+                 "textInput10": " 🦄 Envoie-moi un avis!",
+                 "textInput11": " 🐓 Les acteurs Français de la réparation",
+                 "textInput12" : "⚠ indiquez l'Age de la machine",
+                 "textInput13" : "Indiquez toute autre info utile ici",
+                 "textInput14" : "Tout sur ReparatorAI 👓",
+                 "textInput15" : "Mon objet est-il réparable ? 😰",
+                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 65000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde."
                  }
+
+topCategory_uk=['BATHROOM', 'ELECTRONICS', 'HOME', 'IMAGE', 'KITCHEN', 'OFFICE', 'OTHER', 'SOUND']
+topCategory_fr=['SALLE DE BAIN','ELECTRONIQUE','MAISON','IMAGE','CUISINE','BUREAU','AUTRES','SON']
+
 selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
  'PORTABLE RADIO', 'HANDHELD ENTERTAINMENT DEVICE', 'FOOD PROCESSOR', 'SMALL HOME ELECTRICAL',
  'HAIR & BEAUTY ITEM', 'MISC', 'SEWING MACHINE', 'WATCH/CLOCK', 'HI-FI SEPARATES',
@@ -243,25 +257,51 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
  'Instrument de musique', 'Vidéo projecteur', 'Accessoire PC', 'Climatiseur / déshumidificateur', 'Ventilateur', 'Console de jeux vidéo']
 selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
 
+#nettoyage de dataset source
 my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202204.csv')
 my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_data=clean_df(my_data)
+my_top_cat=''
 my_final_object=''
 my_final_brand=''
-
 my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
+#qui sommes nous
+with st.expander(dict_screen["textInput14"]):
+    dict_screen["textInput16"]
+
+# partie sur les infos de réparation
+st.subheader(dict_screen["textInput15"])
+
 if lang_var=='UK':
-    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK)))
+    my_final_cat = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk)))
 elif lang_var=='FR':
-    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR)))
+    my_final_cat_FR = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr)))
+    index_in_list=topCategory_fr.index(my_final_cat_FR)
+    my_final_cat=topCategory_uk[index_in_list]
+
+selectObjectList_UK_cat=sorted(my_data[my_data.TopCategory==my_final_cat].product_category_new.unique())
+selectObjectList_FR_cat=[]
+for my_prod_cat in selectObjectList_UK_cat:
+    index_uk=selectObjectList_UK.index(my_prod_cat)
+    selectObjectList_FR_cat.append(selectObjectList_FR[index_uk])
+
+if lang_var=='UK':
+    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat)))
+elif lang_var=='FR':
+    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat)))
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
 
 my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist()))
 my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
+
+if my_age=="":
+    st.write(dict_screen['textInput12'])
+
+other_inputs=st.text_input(dict_screen['textInput13'], value="",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
@@ -269,12 +309,18 @@ if col1.button(dict_screen["button1"]):
     try:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
+
+        if float(my_age)>1:
+            the_letter='s'
+        else:
+            the_letter=''
+
         if lang_var=="UK":
-            st.subheader('Worth trying to repair the {} {} of {} years old ?'.format(my_final_object, my_final_brand, my_age))
+            st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_object, my_final_brand, my_age, the_letter))
             st.subheader(the_message)
             st.subheader(the_bonus_message)
         elif lang_var=='FR':
-            st.subheader('Réparer le/la {} {} de {} ans, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age))
+            st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age, the_letter))
             st.subheader(the_message)
             st.subheader(the_bonus_message)
             st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")

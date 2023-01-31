@@ -193,7 +193,7 @@ if lang_var=='UK':
                  "textInput1":"BRAND",
                  "selectBox2":'The BRAND',
                  "textInput2":'NOT FOUND !',
-                 "textInput3": "the AGE (years)",
+                 "textInput3": "The AGE (years)",
                  "button1": "Let's find repairs! 🛠 ",
                  "button2": "Best repair tutorials on the web 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT in our database',
@@ -215,20 +215,20 @@ elif lang_var=='FR':
     dict_screen={"selectBox0":"Catégorie de ton objet",
                  "selectBox1":"L'objet que tu souhaites réparer ",
                  "textInput1":"MARQUE",
-                 "selectBox2":"La MARQUE",
+                 "selectBox2":"La marque",
                  "textInput2":'PAS TROUVé !',
-                 "textInput3": "Quel AGE a-t-il ? (en années)",
+                 "textInput3": "Quel âge a-t-il ? (en années)",
                  "button1": "Voyons si c'est réparable ! 🛠 ",
                  "button2": "Les meilleurs Tutos du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES dans notre database',
                  "textInput5": "NOMBRE DE {} {} EN PANNE",
-                 "textInput6": "AGE MOYEN des pannes (années)",
+                 "textInput6": "AGE moyen des pannes (années)",
                  "textInput7": "% DES REPARATIONS REUSSIES",
                  "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE TIEN",
                  "textInput9": "% DES REPARATIONS REUSSIES DE {}",
                  "textInput10": " 🦄 Envoie-moi un avis!",
                  "textInput11": " 🐓 Les acteurs Français de la réparation",
-                 "textInput12" : "⚠ indiquez l'Age de la machine",
+                 "textInput12" : "⚠ Indiquez l'Age de la machine",
                  "textInput13" : "Indiquez toute autre info utile ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
                  "textInput15" : "Mon objet est-il réparable ? 😰",
@@ -301,7 +301,7 @@ my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=Non
 if my_age=="":
     st.write(dict_screen['textInput12'])
 
-other_inputs=st.text_input(dict_screen['textInput13'], value="",max_chars=None, key=None, type="default")
+other_inputs = st.text_input(dict_screen['textInput13'], value="",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
@@ -365,10 +365,10 @@ if col1.button(dict_screen["button1"]):
 
 if col2.button(dict_screen["button2"]):
     if lang_var == 'UK':
-        query='repair {} {} fixit tutorial'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
     elif lang_var == 'FR':
         my_final_object=my_final_object_FR
-        query='réparation {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand).replace(' ','+')
+        query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
     try:
         result_df, result_str, count_str=crawl_query(query)
         st.markdown(f'{count_str}', unsafe_allow_html=True)

@@ -37,9 +37,9 @@ def clean_df(df):
 
 def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     if lang_var=='UK':
-        the_message=' 🙄 Sorry, too few data to answer'
+        the_message=' 🙄 Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
     elif lang_var=='FR':
-        the_message = ' 🙄 Désolé, pas assez de data pour te répondre'
+        the_message = " 🙄 Désolé, pas assez de data pour répondre, mais jette un oeil à l'onglet statistiques pour plus d'infos ⏬"
     else:
         st.write('error')
     my_useful_dataset = my_dataset
@@ -68,20 +68,20 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
                 if lang_var=='UK':
                     the_message=' 😍 YES! Run to repair !'
                 elif lang_var=='FR':
-                    the_message=' 😍 OUI! Cours le faire réparer !'
+                    the_message=' 😍 OUI! Cours faire réparer !'
                 else: st.write('error')
             elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
                 if lang_var=='UK':
-                    the_message='😙 YES! You should try to repair it'
+                    the_message='😙 YES! You should try to repair'
                 elif lang_var=='FR':
-                    the_message = " 😙 OUI! Ca vaut le coup d'essayer de le réparer"
+                    the_message = " 😙 OUI! Tu peux essayer de faire réparer"
                 else:
                     st.write('error')
             else:
                 if lang_var=='UK':
-                    the_message='😎 YES, but you need an expert!'
+                    the_message='😎 YES, but you need an expert !'
                 elif lang_var=='FR':
-                    the_message = '😎 OUI, mais il te faut un expert de la réparation!'
+                    the_message = '😎 OUI, mais il te faut un expert de la réparation !'
                 else:
                     st.write('error')
     else:

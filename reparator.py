@@ -9,20 +9,6 @@ import logging
 import shutil
 import requests
 
-st.image("bannerTop.jpg")
-col10, col11, col12=st.columns([1,20,4])
-lang_var = col12.radio("",('FR','UK'))
-col11.title('REPARATOR.AI ')
-
-if lang_var=='UK':
-    col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
-    st.write('')
-elif lang_var=='FR':
-    col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
-    st.write('')
-else:
-    st.write('error language')
-
 def local_css(filename):
     with open(filename) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -187,6 +173,20 @@ def crawl_query(query):
 
     return result_df, result_str, count_str
 
+st.image("bannerTop.jpg")
+col10, col11, col12=st.columns([1,20,4])
+lang_var = col12.radio("",('FR','UK'))
+col11.title('REPARATOR.AI ')
+
+if lang_var=='UK':
+    col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
+    st.write('')
+elif lang_var=='FR':
+    col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
+    st.write('')
+else:
+    st.write('error language')
+
 if lang_var=='UK':
     dict_screen={"selectBox0":"OBJECT Category",
                  "selectBox1":"OBJECT name - chose the right one",
@@ -207,7 +207,7 @@ if lang_var=='UK':
                  "textInput12":"⚠ Age is missing",
                  "textInput13" : "Please indicate any other useful info here",
                  "textInput14" : "About ReparatorAI 👓",
-                 "textInput15" : "Can anybody repair my machine please ? 😰",
+                 "textInput15" : "Should I repair or should I throw ? 😰",
                  "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 65000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide."
 
                  }
@@ -231,7 +231,7 @@ elif lang_var=='FR':
                  "textInput12" : "⚠ Indiquez l'Age de la machine",
                  "textInput13" : "Indiquez toute autre info utile ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
-                 "textInput15" : "Mon objet est-il réparable ? 😰",
+                 "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! 😰",
                  "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 65000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde."
                  }
 

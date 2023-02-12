@@ -21,7 +21,7 @@ def clean_df(df):
     df_ok['repair_barrier_if_end_of_life']=df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
     return df_ok
 
-def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
+def extract_info_machine(my_dataset,my_machine, my_brand, lang_var, pb_cat):
     if lang_var=='UK':
         the_message=' 🙄 Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
     elif lang_var=='FR':
@@ -30,17 +30,27 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
         st.write('error')
     my_useful_dataset = my_dataset
     my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
+    if pb_cat in ['U','G']:
+        my_useful_dataset_pbCat = my_useful_dataset
+    else:
+        my_useful_dataset_pbCat=my_useful_dataset[my_useful_dataset['problem_class_main'] == pb_cat]
+
     my_dataset_brand=my_dataset[my_dataset['brand_ok']==my_brand]
     if my_dataset_brand.shape[0]>0:
-        my_percent_of_repair_brand = round(
-            my_dataset_brand[my_dataset_brand['repair_status'] == 'Fixed'].shape[0] / my_dataset_brand.shape[0], 2)
+        my_percent_of_repair_brand = round(my_dataset_brand[my_dataset_brand['repair_status'] == 'Fixed'].shape[0] / my_dataset_brand.shape[0], 2)
     else:
         my_percent_of_repair_brand='not found'
+
     if my_useful_dataset.shape[0]>0:
-        my_percent_of_repair_product = round(
-            my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset.shape[0], 2)
+        my_percent_of_repair_product = round(my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset.shape[0], 2)
     else:
         my_percent_of_repair_product='not found'
+
+    if my_useful_dataset_pbCat.shape[0]>0:
+        my_percent_of_repair_product_pbCat = round(my_useful_dataset_pbCat[my_useful_dataset_pbCat['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset_pbCat.shape[0], 2)
+    else:
+        my_percent_of_repair_product_pbCat ='not found'
+
 
     my_useful_dataset = my_useful_dataset[my_useful_dataset['brand_ok'] == my_brand]
     if my_useful_dataset.shape[0] > 0:
@@ -58,9 +68,9 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
                 else: st.write('error')
             elif ((my_percent_of_repair <0.5) & (my_percent_of_repair_product>0.5)):
                 if lang_var=='UK':
-                    the_message='😙 YES! You should try to repair'
+                    the_message='😙 YES! You should try to repair. '
                 elif lang_var=='FR':
-                    the_message = " 😙 OUI! Tu peux essayer de faire réparer"
+                    the_message = " 😙 OUI! Tu peux essayer de faire réparer. "
                 else:
                     st.write('error')
             else:
@@ -73,7 +83,7 @@ def extract_info_machine(my_dataset,my_machine, my_brand, lang_var):
     else:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product='not found', 'not found', 'not found','not found'
    
-    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, my_percent_of_repair_brand, the_message
+    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat
 
 def find_in_list(the_string, the_list):
     results=[]
@@ -188,12 +198,12 @@ else:
     st.write('error language')
 
 if lang_var=='UK':
-    dict_screen={"selectBox0":"OBJECT Category",
-                 "selectBox1":"OBJECT name - chose the right one",
+    dict_screen={"selectBox0":"1️⃣ OBJECT Category",
+                 "selectBox1":"2️⃣ OBJECT name - chose the right one",
                  "textInput1":"BRAND",
-                 "selectBox2":'The BRAND',
+                 "selectBox2":'3️⃣ The BRAND',
                  "textInput2":'NOT FOUND !',
-                 "textInput3": "The AGE (years)",
+                 "textInput3": "4️⃣ The AGE (years)",
                  "button1": "Let's find repairs! 🛠 ",
                  "button2": "Best repair tutorials on the web 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT in our database',
@@ -201,42 +211,51 @@ if lang_var=='UK':
                  "textInput6":'MEAN AGE of failures (years)',
                  "textInput7": 'REPAIR SUCCESS RATE (%)',
                  "textInput8":'# {} {} OF SAME AGE',
-                 "textInput9":'REPAIRS SUCCESS RATE (%) FOR {}',
+                 "textInput9":'REPAIR SUCCESS RATE (%) FOR {}',
                  "textInput10":"🦄 Send me a comment!",
                  "textInput11":"🐓 French Actors for Repair",
                  "textInput12":"⚠ Age is missing",
-                 "textInput13" : "Please indicate any other useful info here",
+                 "textInput13" : "6️⃣ Please indicate any other useful info here",
                  "textInput14" : "About ReparatorAI 👓",
                  "textInput15" : "Should I repair or should I throw ? 😰",
-                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 65000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide."
-
+                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 65000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
+                 "textInput17": "5️⃣ The problem looks like :",
+                 "textInput18": '{} REPAIR SUCCESS RATE (%)',
+                 "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT'
                  }
 elif lang_var=='FR':
-    dict_screen={"selectBox0":"Catégorie de ton objet",
-                 "selectBox1":"L'objet que tu souhaites réparer ",
+    dict_screen={"selectBox0":"1️⃣ Catégorie de ton objet",
+                 "selectBox1":"2️⃣ L'objet que tu souhaites réparer ",
                  "textInput1":"MARQUE",
-                 "selectBox2":"La marque",
+                 "selectBox2":"3️⃣ La marque",
                  "textInput2":'PAS TROUVé !',
-                 "textInput3": "Quel âge a-t-il ? (en années)",
+                 "textInput3": "4️⃣ Quel âge a-t-il ? (en années)",
                  "button1": "Voyons si c'est réparable ! 🛠 ",
                  "button2": "Les meilleurs Tutos du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES dans notre database',
                  "textInput5": "NOMBRE DE {} {} EN PANNE",
                  "textInput6": "AGE moyen des pannes (années)",
-                 "textInput7": "% DES REPARATIONS REUSSIES",
-                 "textInput8": "NOMBRE DE {} {} DU MÊME AGE QUE LE TIEN",
-                 "textInput9": "% DES REPARATIONS REUSSIES DE {}",
+                 "textInput7": "% DE SUCCES DES REPARATIONS",
+                 "textInput8": "NOMBRE DE {} {} DU MÊME AGE",
+                 "textInput9": "% DE SUCCES DES REPARATIONS DE {}",
                  "textInput10": " 🦄 Envoie-moi un avis!",
                  "textInput11": " 🐓 Les acteurs Français de la réparation",
                  "textInput12" : "⚠ Indiquez l'Age de la machine",
-                 "textInput13" : "Indiquez toute autre info utile ici",
+                 "textInput13" : "6️⃣ Indiquez toute autre info utile ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
                  "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! 😰",
-                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 65000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde."
+                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 65000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                 "textInput17": "5️⃣ La panne a l'air d'être d'origine :",
+                 "textInput18": "% DE SUCCES DE REPARATION {} ",
+                 "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE"
                  }
 
 topCategory_uk=['BATHROOM', 'ELECTRONICS', 'HOME', 'IMAGE', 'KITCHEN', 'OFFICE', 'OTHER', 'SOUND']
 topCategory_fr=['SALLE DE BAIN','ELECTRONIQUE','MAISON','IMAGE','CUISINE','BUREAU','AUTRES','SON']
+
+pb_category_uk=["Mechanical","Electric/Electronic","Fire/leaks/dirt","I don't know"]
+pb_category_fr=["Mécanique","Electrique/Electronique","Feu/Fuite/Saleté","Je ne sais pas"]
+pb_category_values=['M','E','O','U']
 
 selectObjectList_UK=['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFETY LIGHTS', 'LAMP',
  'PORTABLE RADIO', 'HANDHELD ENTERTAINMENT DEVICE', 'FOOD PROCESSOR', 'SMALL HOME ELECTRICAL',
@@ -275,10 +294,11 @@ with st.expander(dict_screen["textInput14"]):
 # partie sur les infos de réparation
 st.subheader(dict_screen["textInput15"])
 
+col1, _, col2=st.columns([5,1,5])
 if lang_var=='UK':
-    my_final_cat = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk)))
+    my_final_cat = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk)))
 elif lang_var=='FR':
-    my_final_cat_FR = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr)))
+    my_final_cat_FR = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr)))
     index_in_list=topCategory_fr.index(my_final_cat_FR)
     my_final_cat=topCategory_uk[index_in_list]
 
@@ -289,79 +309,91 @@ for my_prod_cat in selectObjectList_UK_cat:
     selectObjectList_FR_cat.append(selectObjectList_FR[index_uk])
 
 if lang_var=='UK':
-    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat)))
+    my_final_object = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat)))
 elif lang_var=='FR':
-    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat)))
+    my_final_object_FR = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat)))
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
 
-my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist()))
-my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
+col3, _, col4=st.columns([5,1,5])
+my_final_brand = col3.selectbox(dict_screen["selectBox2"], tuple(pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist()))
+my_age=col4.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
 
 if my_age=="":
     st.write(dict_screen['textInput12'])
+
+if lang_var=='UK':
+    my_pb_cat_selected = st.selectbox(dict_screen["textInput17"], tuple(pb_category_uk))
+    my_pb_cat_val = pb_category_values[pb_category_uk.index(my_pb_cat_selected)]
+elif lang_var=='FR':
+    my_pb_cat_selected = st.selectbox(dict_screen["textInput17"], tuple(pb_category_fr))
+    my_pb_cat_val = pb_category_values[pb_category_fr.index(my_pb_cat_selected)]
+
 
 other_inputs = st.text_input(dict_screen['textInput13'], value="",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
     st.write('-----------------------------------')
-    try:
-        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var)
-        the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
+    #try:
+    my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
+    the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
 
-        if float(my_age)>1:
-            the_letter='s'
+    if float(my_age)>1:
+        the_letter='s'
+    else:
+        the_letter=''
+
+    if lang_var=="UK":
+        st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_object, my_final_brand, my_age, the_letter))
+        st.subheader(the_message)
+        st.subheader(the_bonus_message)
+    elif lang_var=='FR':
+        st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age, the_letter))
+        st.subheader(the_message)
+        st.subheader(the_bonus_message)
+        st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
+    st.write(the_co2_message)
+    st.write(the_water_message)
+
+    if lang_var=='FR':
+        my_final_object=my_final_object_FR
+
+    with st.expander(dict_screen["textInput4"]):
+        col5, col6, col7= st.columns(3)
+        st.metric(dict_screen["textInput5"].format(my_final_object, my_final_brand), my_number_of_machine_brand, delta=None, delta_color="normal")
+        st.metric(dict_screen["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
+        st.metric(dict_screen["textInput7"], round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
+
+        if my_pb_cat_val not in ['U','G']:
+            if my_percent_of_repair_product_pbCat != 'not found':
+                st.metric(dict_screen["textInput18"].format(my_pb_cat_selected), round(my_percent_of_repair_product_pbCat * 100, 1), delta=None,delta_color="normal")
+
+        useful_data=useful_data.dropna(axis=0, subset=['product_age'])
+        useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
+        col8,col9=st.columns(2)
+        st.metric(dict_screen["textInput8"].format(my_final_object, my_final_brand), useful_data_age.shape[0], delta=None, delta_color="normal")
+
+        if useful_data_age.shape[0]>0:
+            my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)
+            st.metric(dict_screen["textInput19"], round(my_own_pc_repair * 100,1) , delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
         else:
-            the_letter=''
+            my_own_pc_repair='not found'
+            #st.metric(dict_screen["textInput7"], my_own_pc_repair)
 
-        if lang_var=="UK":
-            st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_object, my_final_brand, my_age, the_letter))
-            st.subheader(the_message)
-            st.subheader(the_bonus_message)
-        elif lang_var=='FR':
-            st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age, the_letter))
-            st.subheader(the_message)
-            st.subheader(the_bonus_message)
-            st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
-        st.write(the_co2_message)
-        st.write(the_water_message)
+        if (my_percent_of_repair_product != 'not found'):
+            st.metric(dict_screen["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
+                        delta=None, delta_color="normal")
+        if (my_percent_of_repair_brand != 'not found'):
+            st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
 
-        if lang_var=='FR':
-            my_final_object=my_final_object_FR
-
-        with st.expander(dict_screen["textInput4"]):
-            col5, col6, col7= st.columns(3)
-            st.metric(dict_screen["textInput5"].format(my_final_object, my_final_brand), my_number_of_machine_brand, delta=None, delta_color="normal")
-            st.metric(dict_screen["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
-            st.metric(dict_screen["textInput7"], round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
-
-            useful_data=useful_data.dropna(axis=0, subset=['product_age'])
-            useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
-            col8,col9=st.columns(2)
-            st.metric(dict_screen["textInput8"].format(my_final_object, my_final_brand), useful_data_age.shape[0], delta=None, delta_color="normal")
-
-            if useful_data_age.shape[0]>0:
-                my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)
-                st.metric(dict_screen["textInput7"], round(my_own_pc_repair * 100,1),
-                            delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
-            else:
-                my_own_pc_repair='Not found any'
-                st.metric(dict_screen["textInput7"], my_own_pc_repair)
-
-            if ((my_percent_of_repair_product != 'not found') & (my_own_pc_repair != 'not found')):
-                st.metric(dict_screen["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
-                            delta=round(my_percent_of_repair_product * 100 - my_percent_of_repair * 100, 1), delta_color="normal")
-            if (my_percent_of_repair_brand != 'not found'):
-                st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
-
-    except:
-        if lang_var=='UK':
-            st.write('MISSING INFO')
-        elif lang_var=='FR':
-            st.write('INFORMATION MANQUANTE')
-        else:
-            st.write ('error')
+    # except:
+    #     if lang_var=='UK':
+    #         st.write('MISSING INFO')
+    #     elif lang_var=='FR':
+    #         st.write('INFORMATION MANQUANTE')
+    #     else:
+    #         st.write ('error')
 
 if col2.button(dict_screen["button2"]):
     if lang_var == 'UK':

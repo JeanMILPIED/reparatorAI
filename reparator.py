@@ -14,10 +14,11 @@ def local_css(filename):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def clean_df(df):
-    df_ok=df[df.year_of_manufacture>1950]
+    #df_ok=df[df.year_of_manufacture>1950]
+    df_ok=df
     my_brand_low_freq=df_ok.brand.value_counts()[df_ok.brand.value_counts()<10].index.tolist()
     df_ok=df_ok[df_ok.brand.isin(my_brand_low_freq)==False]
-    df_ok=df_ok[df_ok.repair_status!='Unknown']
+    #df_ok=df_ok[df_ok.repair_status!='Unknown']
     df_ok['repair_barrier_if_end_of_life']=df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
     return df_ok
 
@@ -218,7 +219,7 @@ if lang_var=='UK':
                  "textInput13" : "6️⃣ Please indicate any other useful info here",
                  "textInput14" : "About ReparatorAI 👓",
                  "textInput15" : "Should I repair or should I throw ? 😰",
-                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 65000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
+                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 81000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
                  "textInput17": "5️⃣ The problem looks like :",
                  "textInput18": '{} REPAIR SUCCESS RATE (%)',
                  "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT'
@@ -244,7 +245,7 @@ elif lang_var=='FR':
                  "textInput13" : "6️⃣ Indiquez toute autre info utile ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
                  "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! 😰",
-                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 65000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 81000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                  "textInput17": "5️⃣ La panne a l'air d'être d'origine :",
                  "textInput18": "% DE SUCCES DE REPARATION {} ",
                  "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE"
@@ -277,8 +278,8 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
 selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
 
 #nettoyage de dataset source
-my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202204.csv')
-my_data['brand']=[str(my_val).upper().strip() for my_val in my_data.brand]
+my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202210.csv')
+my_data['brand']=['-'.join(str(my_brand).upper().strip().split(' ')[0:1]) for my_brand in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_data=clean_df(my_data)
 my_top_cat=''

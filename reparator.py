@@ -22,6 +22,12 @@ def clean_df(df):
     df_ok['repair_barrier_if_end_of_life']=df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
     return df_ok
 
+def build_pick_up_list(my_df, my_list_column):
+    print(my_df[[my_list_column]].shape)
+    my_df_valuecounts=my_df[[my_list_column]].iloc[:,0].value_counts().reset_index()
+    list_out=[str(my_df_valuecounts.iloc[i,0])+' - '+'({})'.format(my_df_valuecounts.iloc[i,1]) for i in range(my_df_valuecounts.shape[0])]
+    return my_df_valuecounts, list_out
+
 def extract_info_machine(my_dataset,my_machine, my_brand, lang_var, pb_cat):
     if lang_var=='UK':
         the_message=' 🙄 Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
@@ -297,27 +303,36 @@ st.subheader(dict_screen["textInput15"])
 
 col1, _, col2=st.columns([5,1,5])
 if lang_var=='UK':
-    my_final_cat = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk)))
+    _,topCategory_uk_list=build_pick_up_list(my_data, 'TopCategory')
+    my_final_cat = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk_list)))
+    my_final_cat=my_final_cat.split(' -')[0]
 elif lang_var=='FR':
-    my_final_cat_FR = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr)))
+    _,topCategory_fr_list=build_pick_up_list(my_data, 'TopCategory_FR')
+    my_final_cat_FR = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr_list)))
+    my_final_cat_FR=my_final_cat_FR.split(' -')[0]
     index_in_list=topCategory_fr.index(my_final_cat_FR)
     my_final_cat=topCategory_uk[index_in_list]
 
-selectObjectList_UK_cat=sorted(my_data[my_data.TopCategory==my_final_cat].product_category_new.unique())
-selectObjectList_FR_cat=[]
-for my_prod_cat in selectObjectList_UK_cat:
-    index_uk=selectObjectList_UK.index(my_prod_cat)
-    selectObjectList_FR_cat.append(selectObjectList_FR[index_uk])
-
 if lang_var=='UK':
-    my_final_object = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat)))
+    _, selectObjectList_UK_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
+                                                         'product_category_new')
+    my_final_object = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat_list)))
+    my_final_object=my_final_object.split(' -')[0]
+
 elif lang_var=='FR':
-    my_final_object_FR = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat)))
+    _, selectObjectList_FR_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
+                                                         'product_category_FR')
+    my_final_object_FR = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat_list)))
+    my_final_object_FR=my_final_object_FR.split(' -')[0]
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
 
 col3, _, col4=st.columns([5,1,5])
-my_final_brand = col3.selectbox(dict_screen["selectBox2"], tuple(pd.Series(my_data[my_data.product_category==my_final_object].brand_ok.unique()).sort_values().tolist()))
+
+_, selectBrandList = build_pick_up_list(my_data[(my_data.TopCategory == my_final_cat) & (my_data.product_category == my_final_object)],
+                                                         'brand_ok')
+my_final_brand = col3.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
+my_final_brand = my_final_brand.split(' -')[0]
 my_age=col4.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
 
 if my_age=="":
@@ -452,7 +467,7 @@ if st.button(dict_screen["textInput10"]):
     local_css("style/style.css")
 
 st.image("bannerBottom.jpg")
-st.caption('Version 02/12/2022')
+st.caption('Version 27/02/2023')
 if lang_var=='UK':
     st.caption('data source is : https://openrepair.org/open-data/downloads/')
     st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')

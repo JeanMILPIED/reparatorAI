@@ -1,8 +1,11 @@
 # REPARATOR.AI ⚒🚀⚡  
 ### L'outil qui prédit la réparabilité de tes objets  
 
-En ligne depuis 2022, la p'tite application utile qui te dit si ton objet est réparable, c'est reparator.AI.  
-C'est évidemment gratuit ! 
+En ligne depuis 2022, la p'tite application utile qui te dit si ton objet est réparable, c'est ReparatorAI.  
+C'est évidemment gratuit !
+
+https://reparatorai.streamlit.app/  
+ 
 ****   
 
 ### Comment ça marche ? 🙉  
@@ -10,17 +13,17 @@ C'est évidemment gratuit !
 2. Tu indiques la marque  
 3. Tu indiques l'age de ton objet  
 4. Tu cliques sur "est-ce réparable?" et hop on te répond  
-5. Tu cliques sur "les meilleurs tutos" et hop on te donne les liens des meilleurs tutos video du web  
+5. Tu cliques sur "les meilleurs tutos" et hop on te donne les liens des meilleurs tutos video du web pour réparer :)    
   
 ****  
 🌱 En plus, la ptite app sympa te donne un équivalent CO2 sauvé si tu répares.  
-🌈 Et enfin, depuis que le bonus réparation est disponible, on te donne le montant pour ton objet !
+🌈 Et enfin, depuis que le bonus réparation est disponible, on te donne le montant récupérable pour ton objet !
 ****  
 
 ### Mais comment est-ce possible ? 🙃  
-Sous le capot, reparator.ai est branché à une base de données de réparations publique.  
+Sous le capot, ReparatorAI est branché à une base de données de réparations publique.  
 Cette BDD recense toutes les réparations réalisées dans les repair.Café et autres associations de réparations.  
-En exploitant les statistiques agglomérées sur ces quelques 50000 réparations, il est possible de savoir si un objet est réparable.  
+En exploitant les statistiques agglomérées sur ces quelques 81000 réparations, il est possible de savoir si un objet est réparable.  
 Voilà, tu sais tout !  
 ****  
 

@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 import logging
 import shutil
 import requests
+import base64
+import os
 
 def local_css(filename):
     with open(filename) as f:
@@ -417,12 +419,12 @@ if col2.button(dict_screen["button2"]):
     elif lang_var == 'FR':
         my_final_object=my_final_object_FR
         query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-    try:
-        result_df, result_str, count_str=crawl_query(query)
-        st.markdown(f'{count_str}', unsafe_allow_html=True)
-        st.markdown(f'{result_str}', unsafe_allow_html=True)
-    except:
-        st.write('OOOps  - no internet connexion maybe')
+
+    result_df, result_str, count_str=crawl_query(query)
+    st.markdown(f'{count_str}', unsafe_allow_html=True)
+    st.markdown(f'{result_str}', unsafe_allow_html=True)
+    # except:
+    #     st.write('OOOps  - no internet connexion maybe')
     #st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
     #st.dataframe(result_df)
 
@@ -479,12 +481,33 @@ else:
     st.write ('error')
 st.caption("Banner images generated with https://lexica.art")
 
+# insert ebay banner
+SC_ebay = 'https://ebay.us/ZUNSOp'
+
+#@st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+#@st.cache(allow_output_mutation=True)
+def get_img_with_href(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    #html_code = f'''<a href="{target_url}"><img src="data:image/{img_format};base64,{bin_str}"/></a>'''
+    html_code=f'''<a href="{target_url}">![{target_url}](data:image/{img_format};base64,{bin_str})</a>'''
+    #html_code = f'''[![](data:image/{img_format};base64,{bin_str})]'''
+    return html_code
+
+gif_html = get_img_with_href('CertifiedRefurb_980x400.jpg', SC_ebay)
+st.markdown(gif_html, unsafe_allow_html=True)
+
+
 #insert the google analytics or stat_counter
 SC_JS="""
 <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>
 """
 st.components.v1.html(SC_JS)
-
 
 
 

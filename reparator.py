@@ -207,12 +207,12 @@ else:
     st.write('error language')
 
 if lang_var=='UK':
-    dict_screen={"selectBox0":"1️⃣ OBJECT Category",
-                 "selectBox1":"2️⃣ OBJECT name - chose the right one",
+    dict_screen={"selectBox0":"1️⃣ CATEGORY",
+                 "selectBox1":"2️⃣ OBJECT TYPE",
                  "textInput1":"BRAND",
-                 "selectBox2":'3️⃣ The BRAND',
+                 "selectBox2":'3️⃣ BRAND',
                  "textInput2":'NOT FOUND !',
-                 "textInput3": "4️⃣ The AGE (years)",
+                 "textInput3": "4️⃣ AGE (years)",
                  "button1": "Let's find repairs! 🛠 ",
                  "button2": "Best repair tutorials on the web 🚀",
                  "textInput4":'THE STATISTICS BEHIND IT in our database',
@@ -224,21 +224,22 @@ if lang_var=='UK':
                  "textInput10":"🦄 Send me a comment!",
                  "textInput11":"🐓 French Actors for Repair",
                  "textInput12":"⚠ Age is missing",
-                 "textInput13" : "6️⃣ Please indicate any other useful info here",
+                 "textInput13" : "6️⃣ OTHER USEFUL INFO here",
                  "textInput14" : "About ReparatorAI 👓",
                  "textInput15" : "Should I repair or should I throw ? 😰",
-                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 81000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
-                 "textInput17": "5️⃣ The problem looks like :",
+                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 92000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
+                 "textInput17": "5️⃣ THE PROBLEM looks like :",
                  "textInput18": '{} REPAIR SUCCESS RATE (%)',
-                 "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT'
+                 "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT',
+                 "textInput20": 'Today in our database, you will find {} repair events on {} equipment types from {} different brands. Go for an exploration ⏬'
                  }
 elif lang_var=='FR':
-    dict_screen={"selectBox0":"1️⃣ Catégorie de ton objet",
-                 "selectBox1":"2️⃣ L'objet que tu souhaites réparer ",
+    dict_screen={"selectBox0":"1️⃣ CATEGORIE",
+                 "selectBox1":"2️⃣ TYPE D'OBJET ",
                  "textInput1":"MARQUE",
-                 "selectBox2":"3️⃣ La marque",
+                 "selectBox2":"3️⃣ MARQUE",
                  "textInput2":'PAS TROUVé !',
-                 "textInput3": "4️⃣ Quel âge a-t-il ? (en années)",
+                 "textInput3": "4️⃣ AGE (en années)",
                  "button1": "Voyons si c'est réparable ! 🛠 ",
                  "button2": "Les meilleurs Tutos du Web 🚀",
                  "textInput4": 'STATISTIQUES DE PANNES dans notre database',
@@ -250,13 +251,14 @@ elif lang_var=='FR':
                  "textInput10": " 🦄 Envoie-moi un avis!",
                  "textInput11": " 🐓 Les acteurs Français de la réparation",
                  "textInput12" : "⚠ Indiquez l'Age de la machine",
-                 "textInput13" : "6️⃣ Indiquez toute autre info utile ici",
+                 "textInput13" : "6️⃣ AUTRE INFO UTILE ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
                  "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! 😰",
-                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 81000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
-                 "textInput17": "5️⃣ La panne a l'air d'être d'origine :",
+                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 92000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                 "textInput17": "5️⃣ LA PANNE a l'air d'être d'origine :",
                  "textInput18": "% DE SUCCES DE REPARATION {} ",
-                 "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE"
+                 "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE",
+                 "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras {} réparations portant sur {} types d'équipements de {} marques différentes. L'exploration c'est par là ⏬"
                  }
 
 topCategory_uk=['BATHROOM', 'ELECTRONICS', 'HOME', 'IMAGE', 'KITCHEN', 'OFFICE', 'OTHER', 'SOUND']
@@ -299,6 +301,11 @@ my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in m
 #qui sommes nous
 with st.expander(dict_screen["textInput14"]):
     dict_screen["textInput16"]
+    st.write(dict_screen["textInput20"].format(my_data.shape[0], len(my_data.product_category.unique()),
+                                               len(my_data.brand.unique())))
+
+#partie de présentation de la base
+
 
 # partie sur les infos de réparation
 st.subheader(dict_screen["textInput15"])

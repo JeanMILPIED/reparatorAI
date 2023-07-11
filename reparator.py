@@ -10,6 +10,21 @@ import shutil
 import requests
 import base64
 import os
+import pygsheets
+import json
+from google.oauth2 import service_account
+from datetime import datetime
+
+#needed to connect to googlesheet db
+SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
+# with open('.streamlit/secrets.toml', 'r') as file:
+#    json_file=file.read()
+# service_account_info = json.loads(json_file)
+service_account_info=st.secrets["gcp_service_account"]
+my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
+gc = pygsheets.authorize(custom_credentials=my_credentials)
+DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"
+
 
 def local_css(filename):
     with open(filename) as f:
@@ -191,6 +206,21 @@ def crawl_query(query):
         count_str = '<b style="font-size:20px;">Looks like an error!!</b>'
 
     return result_df, result_str, count_str
+
+def build_data_dict_to_push(my_final_cat, my_final_object,my_final_brand, lang_var, my_age, my_pb_cat_selected, other_inputs):
+    data_dict = {'timestamp': [str(datetime.now())], 'category': [str(my_final_cat)], 'object': [str(my_final_object)],
+               'brand': [str(my_final_brand)], 'age': [str(my_age)], 'pb_category': [str(my_pb_cat_selected)],
+                 'other_inputs': [str(other_inputs)], 'language':[str(lang_var)]}
+    return data_dict
+
+def write_data_in_gsheet_db(data_dict, DB_URL):
+    try:
+        sh = gc.open_by_url(DB_URL)
+        new_data = pd.DataFrame(data_dict)
+        new_data_values = new_data.values.tolist()
+        sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
+    except:
+        print('error in pushing data to database')
 
 st.image("bannerTop.jpg")
 col10, col11, col12=st.columns([1,20,4])
@@ -411,6 +441,10 @@ if col1.button(dict_screen["button1"]):
                         delta=None, delta_color="normal")
         if (my_percent_of_repair_brand != 'not found'):
             st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
+
+    #write in db googlesheet
+    data_dict=build_data_dict_to_push(my_final_cat, my_final_object,my_final_brand, lang_var, my_age, my_pb_cat_selected, other_inputs)
+    write_data_in_gsheet_db(data_dict, DB_URL)
 
     # except:
     #     if lang_var=='UK':

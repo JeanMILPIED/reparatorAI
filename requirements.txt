@@ -12,6 +12,13 @@ defusedxml==0.7.1
 dm-tree==0.1.6
 entrypoints==0.4
 gast==0.4.0
+google-api-core==2.11.1
+google-api-python-client==2.93.0
+google-auth==2.22.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==1.0.0
+googleapis-common-protos==1.59.1
+grpcio-status==1.48.2
 h5py==3.1.0
 idna==3.3
 importlib-metadata==4.8.3
@@ -28,11 +35,12 @@ pandas==1.1.5
 Pillow==8.4.0
 prometheus-client==0.14.1
 prompt-toolkit==3.0.29
-protobuf==3.19.4
+protobuf==3.19.5
 pyarrow==6.0.1
 pycparser==2.21
 pydeck==0.6.2
 Pygments==2.11.2
+pygsheets==2.0.6
 Pympler==1.0.1
 requests==2.27.1
 Send2Trash==1.8.0

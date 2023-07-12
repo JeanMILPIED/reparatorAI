@@ -1,7 +1,7 @@
 ,CO2e,water_L,Bonus_euros
 Aircon/dehumidifier,[239],"['TBD', 'TBD']",25
 Battery/charger/adapter,"['TBD', 'TBD']","['TBD', 'TBD']",
-Coffee maker,"[22.5,47.6]","['TBD', 'TBD']",15
+Coffee maker,"[22.5,47.6]","['TBD', 'TBD']",10-25
 DSLR/video camera,"[22,30.6]","['TBD', 'TBD']",
 Decorative or safety lights,"['TBD', 'TBD']","['TBD', 'TBD']",
 Desktop computer,"[169, 481]",[6000],45
@@ -15,12 +15,12 @@ Hair dryer,"['TBD', 'TBD']","['TBD', 'TBD']",10
 Handheld entertainment device,"[2,7]","['TBD', 'TBD']",
 Headphones,"['TBD', 'TBD']","['TBD', 'TBD']",
 Hi-Fi integrated,[136'],"['TBD', 'TBD']",15
-Hi-Fi separates,[123],"['TBD', 'TBD']",15
+Hi-Fi separates,[123],"['TBD', 'TBD']",20
 Iron,"['TBD', 'TBD']","['TBD', 'TBD']",10
 Kettle,[9.9],"['TBD', 'TBD']",10
 Lamp,"['TBD', 'TBD']","['TBD', 'TBD']",
 Laptop,"[156, 349]","[4000,6000]",45
-Large home electrical,"['TBD', 'TBD']","['TBD', 'TBD']", 25
+Large home electrical,"['TBD', 'TBD']","['TBD', 'TBD']",25
 Misc,"['TBD', 'TBD']","['TBD', 'TBD']",
 Mobile,"[16, 74]","[500, 1500]",25
 Musical instrument,"['TBD', 'TBD']","['TBD', 'TBD']",15
@@ -32,7 +32,7 @@ Printer/scanner,"[88,197]","['TBD', 'TBD']",35
 Projector,[145],"['TBD', 'TBD']",30
 Sewing machine,"['TBD', 'TBD']","['TBD', 'TBD']",
 Small home electrical,"['TBD', 'TBD']","['TBD', 'TBD']",10
-Small kitchen item,"[21.7, 41.3]","['TBD', 'TBD']",
+Small kitchen item,"[21.7, 41.3]","['TBD', 'TBD']",10
 TV and gaming-related accessories,"[45,153]","['TBD', 'TBD']",
 Tablet,"[37,86]","['TBD', 'TBD']",25
 Toaster,"['TBD', 'TBD']","['TBD', 'TBD']",10

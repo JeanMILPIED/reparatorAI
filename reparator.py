@@ -17,10 +17,10 @@ from datetime import datetime
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
-# with open('.streamlit/secrets.toml', 'r') as file:
-#    json_file=file.read()
-# service_account_info = json.loads(json_file)
-service_account_info=st.secrets["gcp_service_account"]
+with open('.streamlit/secrets.toml', 'r') as file:
+   json_file=file.read()
+service_account_info = json.loads(json_file)
+#service_account_info=st.secrets["gcp_service_account"]
 my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 gc = pygsheets.authorize(custom_credentials=my_credentials)
 DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"
@@ -135,14 +135,14 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
         the_water=str(the_usefull_data.water_L.iloc[0]).replace(',',' to ')
         the_bonus='NO'
         if 'TBD' in the_co2:
-            the_co2_message = "CO2: no data on CO2 yet 🙄"
+            the_co2_message = "🌿 CO2: no data on CO2 yet 🙄"
         else:
-            the_co2_message = "CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(str(the_co2)[1:-1])
+            the_co2_message = "🌿 CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(str(the_co2)[1:-1])
 
         if 'TBD' in the_water:
-            the_water_message = "WATER: no data on water yet 🙄"
+            the_water_message = "💧 WATER: no data on water yet 🙄"
         else:
-            the_water_message = "WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
+            the_water_message = "💧 WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
                 str(the_water)[1:-1])
         the_bonus_message=""
     elif lang_var=='FR':
@@ -150,18 +150,18 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
         the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' à ')
         the_bonus= str(the_usefull_data.Bonus_euros.iloc[0])
         if 'TBD' in the_co2:
-            the_co2_message = "CO2: pas encore de data dispo 🙄"
+            the_co2_message = "🌿 CO2: pas encore de data dispo 🙄"
         else:
-            the_co2_message = "CO2: si tu répares,  {} kg de CO2 évitées. La planète te dit merci 🌍🌎🌏".format(
+            the_co2_message = "🌿 CO2: si tu répares, {} kg de CO2 évités. La planète te dit merci 💛".format(
                 str(the_co2)[1:-1])
 
         if 'TBD' in the_water:
-            the_water_message = "EAU: pas encore de data dispo 🙄"
+            the_water_message = "💧 EAU: pas encore de data dispo 🙄"
         else:
-            the_water_message = "EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
+            the_water_message = "💧 EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
                 str(the_water)[1:-1])
         if the_bonus!='nan':
-            the_bonus_message="🥳 Eligible au bonus d'état réparation de {} euros*".format(the_bonus)
+            the_bonus_message="💰 Eligible au bonus d'état réparation de {} euros*".format(str(the_bonus))
         else:
             the_bonus_message="Cette réparation n'est pas encore éligible au bonus d'état*"
     else:
@@ -222,16 +222,30 @@ def write_data_in_gsheet_db(data_dict, DB_URL):
     except:
         print('error in pushing data to database')
 
+#@st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+#@st.cache(allow_output_mutation=True)
+def get_img_with_href(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    html_code = f'''<a href="{target_url}"><img src="data:image/{img_format};base64,{bin_str}" width="100%" height="auto"/></a>'''
+    return html_code
+
+######---- main front code here ---
 st.image("bannerTop.jpg")
 col10, col11, col12=st.columns([1,20,4])
 lang_var = col12.radio("",('FR','UK'))
 col11.title('REPARATOR.AI ')
 
 if lang_var=='UK':
-    col11.write('In 1 minute, we will tell you if you can repair. For free, of course !')
+    col11.write('In less than 1 minute, we will be the first to tell you if you can repair. For free, of course !')
     st.write('')
 elif lang_var=='FR':
-    col11.write("En 1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
+    col11.write("En moins d'1 minute, le premier à te dire si ça peut se réparer. Et c'est gratuit !")
     st.write('')
 else:
     st.write('error language')
@@ -256,7 +270,7 @@ if lang_var=='UK':
                  "textInput12":"⚠ Age is missing",
                  "textInput13" : "6️⃣ OTHER USEFUL INFO here",
                  "textInput14" : "About ReparatorAI 👓",
-                 "textInput15" : "Should I repair or should I throw ? 😰",
+                 "textInput15" : "Should I repair or should I throw ? ⁉",
                  "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 92000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
                  "textInput17": "5️⃣ THE PROBLEM looks like :",
                  "textInput18": '{} REPAIR SUCCESS RATE (%)',
@@ -283,7 +297,7 @@ elif lang_var=='FR':
                  "textInput12" : "⚠ Indiquez l'Age de la machine",
                  "textInput13" : "6️⃣ AUTRE INFO UTILE ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
-                 "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! 😰",
+                 "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! ⁉",
                  "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 92000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                  "textInput17": "5️⃣ LA PANNE a l'air d'être d'origine :",
                  "textInput18": "% DE SUCCES DE REPARATION {} ",
@@ -333,9 +347,6 @@ with st.expander(dict_screen["textInput14"]):
     dict_screen["textInput16"]
     st.write(dict_screen["textInput20"].format(my_data.shape[0], len(my_data.product_category.unique()),
                                                len(my_data.brand.unique())))
-
-#partie de présentation de la base
-
 
 # partie sur les infos de réparation
 st.subheader(dict_screen["textInput15"])
@@ -389,22 +400,40 @@ other_inputs = st.text_input(dict_screen['textInput13'], value="",max_chars=None
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen["button1"]):
+    with st.spinner('Wait for it...'):
+        # write in db googlesheet
+        data_dict = build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_var, my_age,
+                                            my_pb_cat_selected, other_inputs)
+        write_data_in_gsheet_db(data_dict, DB_URL)
+        #try:
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
+        the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
+
     st.write('-----------------------------------')
-    #try:
-    my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
-    the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
-
-    if float(my_age)>1:
-        the_letter='s'
-    else:
-        the_letter=''
-
     if lang_var=="UK":
-        st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_object, my_final_brand, my_age, the_letter))
+        if float(my_age) == 0:
+            the_letter = ''
+            my_age_print = 'less than 1'
+        elif float(my_age) > 1:
+            the_letter = 's'
+            my_age_print = my_age
+        else:
+            the_letter = ''
+            my_age_print = my_age
+        st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_brand, my_final_object, my_age_print, the_letter))
         st.subheader(the_message)
         st.subheader(the_bonus_message)
     elif lang_var=='FR':
-        st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age, the_letter))
+        if float(my_age) == 0:
+            the_letter=''
+            my_age_print = 'moins de 1'
+        elif float(my_age) > 1:
+            the_letter = 's'
+            my_age_print=my_age
+        else:
+            the_letter = ''
+            my_age_print=my_age
+        st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age_print, the_letter))
         st.subheader(the_message)
         st.subheader(the_bonus_message)
         st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
@@ -434,25 +463,12 @@ if col1.button(dict_screen["button1"]):
             st.metric(dict_screen["textInput19"], round(my_own_pc_repair * 100,1) , delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
         else:
             my_own_pc_repair='not found'
-            #st.metric(dict_screen["textInput7"], my_own_pc_repair)
 
         if (my_percent_of_repair_product != 'not found'):
             st.metric(dict_screen["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
                         delta=None, delta_color="normal")
         if (my_percent_of_repair_brand != 'not found'):
             st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
-
-    #write in db googlesheet
-    data_dict=build_data_dict_to_push(my_final_cat, my_final_object,my_final_brand, lang_var, my_age, my_pb_cat_selected, other_inputs)
-    write_data_in_gsheet_db(data_dict, DB_URL)
-
-    # except:
-    #     if lang_var=='UK':
-    #         st.write('MISSING INFO')
-    #     elif lang_var=='FR':
-    #         st.write('INFORMATION MANQUANTE')
-    #     else:
-    #         st.write ('error')
 
 if col2.button(dict_screen["button2"]):
     if lang_var == 'UK':
@@ -464,21 +480,22 @@ if col2.button(dict_screen["button2"]):
     result_df, result_str, count_str=crawl_query(query)
     st.markdown(f'{count_str}', unsafe_allow_html=True)
     st.markdown(f'{result_str}', unsafe_allow_html=True)
-    # except:
-    #     st.write('OOOps  - no internet connexion maybe')
-    #st.markdown('<h3>Data Frame of the above search result</h3>', unsafe_allow_html=True)
-    #st.dataframe(result_df)
 
 st.write("-----------------------------------------------")
 
 from PIL import Image
-PD_img= Image.open('Produits-Durables_logo.png')
-col12,col13=st.columns(2)
-col12.image(PD_img, width=300)
+# PD_img= Image.open('Produits-Durables_logo.png')
+# col12,col13=st.columns(2)
+# col12.image(PD_img, width=300)
+SC_hop="https://www.produitsdurables.fr"
+hop_html = get_img_with_href('Produits-Durables_logo.png', SC_hop)
+col12, col13 = st.columns(2)
+col13.markdown(hop_html, unsafe_allow_html=True)
+
 if lang_var=='UK':
-    col13.write("You want to know more on repair and durability, let's meet on  https://www.produitsdurables.fr")
+    col12.write("You want to know more on repair and durability, let's meet on")
 elif lang_var=='FR':
-    col13.write("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur https://www.produitsdurables.fr")
+    col12.write("Pour plus de conseils pour réparer et faire durer ses objets, rendez-vous sur")
 else:
     st.write ('error')
 
@@ -512,42 +529,28 @@ if st.button(dict_screen["textInput10"]):
 # insert ebay banner
 SC_ebay = 'https://ebay.us/ZUNSOp'
 
-#@st.cache(allow_output_mutation=True)
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-#@st.cache(allow_output_mutation=True)
-def get_img_with_href(local_img_path, target_url):
-    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
-    bin_str = get_base64_of_bin_file(local_img_path)
-    html_code = f'''<a href="{target_url}"><img src="data:image/{img_format};base64,{bin_str}" width="100%" height="auto"/></a>'''
-    #html_code=f'''<a href="{target_url}">![{target_url}](data:image/{img_format};base64,{bin_str}) </a>'''
-    #html_code = f'''[![](data:image/{img_format};base64,{bin_str})]'''
-    return html_code
-
+#ebay banner
 gif_html = get_img_with_href('CertifiedRefurb_980x400.jpg', SC_ebay)
 st.markdown(gif_html, unsafe_allow_html=True)
 
 st.image("bannerBottom.jpg")
-st.caption('Version 12/07/2023')
+st.caption('Version 12/07/2023 - ')
 if lang_var=='UK':
-    st.caption('data source is : https://openrepair.org/open-data/downloads/')
-    st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
-    st.caption('made with love with Streamlit and python')
+    st.caption('Data source is : https://openrepair.org/open-data/downloads/')
+    st.caption('You want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
+    st.caption('Made with 💛 with Streamlit and Python')
     st.caption("Banner images generated with https://lexica.art")
 elif lang_var=='FR':
-    st.caption('lien vers les données sources : https://openrepair.org/open-data/downloads/')
-    st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
-    st.caption('fait avec Streamlit and python')
+    st.caption('Lien vers les données sources : https://openrepair.org/open-data/downloads/')
+    st.caption("Tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
+    st.caption('Fait avec 💛 avec Streamlit et Python')
     st.caption("Images générées par LexicaArt : https://lexica.art")
 else:
     st.write ('error')
 
 
 
-#insert the google analytics or stat_counter
+#insert stat_counter
 SC_JS="""
 <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img src="https://c.statcounter.com/12751623/0/9447ca5b/1/" alt="Web Analytics" ></a>
 """

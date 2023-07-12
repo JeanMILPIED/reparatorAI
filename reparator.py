@@ -17,10 +17,10 @@ from datetime import datetime
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
-with open('.streamlit/secrets.toml', 'r') as file:
-   json_file=file.read()
-service_account_info = json.loads(json_file)
-#service_account_info=st.secrets["gcp_service_account"]
+#with open('.streamlit/secrets.toml', 'r') as file:
+#   json_file=file.read()
+#service_account_info = json.loads(json_file)
+service_account_info=st.secrets["gcp_service_account"]
 my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 gc = pygsheets.authorize(custom_credentials=my_credentials)
 DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"

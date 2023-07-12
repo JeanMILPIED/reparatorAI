@@ -169,37 +169,37 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
     return the_co2_message, the_water_message, the_bonus_message
 
 def crawl_query(query):
-    req = requests.get(f"https://www.bing.com/search?q={query}"+"&answerCount=5&promote=webpages%2Cvideos", headers={"user-agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'})
+    req = requests.get(f"https://www.bing.com/search?q={query}"+"&answerCount=5&promote=webpages%2Cvideos", headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'})
     result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
+    count_str = ''
     if req.status_code == 200: #Status code 200 indicates a successful request
         bs = BeautifulSoup(req.content, features="html.parser") #converting the content/text returned by request to a BeautifulSoup object
         search_result = bs.find_all("li", class_="b_algo") #'b_algo' is the class of the list object which represents a single result
         search_result = [str(i).replace("<strong>","") for i in search_result] #removing the <strong> tag
         search_result = [str(i).replace("</strong>","") for i in search_result] #removing the </strong> tag
-        result_df = pd.DataFrame() #Initializing the data frame that stores the results
+        result_list = []
 
         for n,i in enumerate(search_result): #iterating through the search results
-            if n<=10:
-                individual_search_result = BeautifulSoup(i, features="html.parser") #converting individual search result into a BeautifulSoup object
-                h2 = individual_search_result.find('h2') #Finding the title of the individual search result
-                href = h2.find('a').get('href') #title's URL of the individual search result
-                cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
-                url_txt = h2.find('a').text #title's text of the individual search result
-                #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
-                description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
-                #Appending the result data frame after processing each individual search result
-                result_df = result_df.append(pd.DataFrame({"Title": url_txt, "URL": href, "Description": description}, index=[n]))
-                count_str = f'<b style="font-size:12px;">Search returned {len(result_df)} results</b>'
-                ########################################################
-                ######### HTML code to display search results ##########
-                ########################################################
-                description=description[:200]+'...'
-                result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr>'+\
-                f'<tr style="border: none;"><h7>{description}</h7></tr>'+\
-                f'<tr style="border: none;"><h6>{""}</h6></tr>'
+            individual_search_result = BeautifulSoup(i, features="html.parser") #converting individual search result into a BeautifulSoup object
+            h2 = individual_search_result.find('h2') #Finding the title of the individual search result
+            href = h2.find('a').get('href') #title's URL of the individual search result
+            cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
+            url_txt = h2.find('a').text #title's text of the individual search result
+            #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
+            description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
+            #Appending the result data frame after processing each individual search result
+            result_list.append({"Title": url_txt, "URL": href, "Description": description})
+            ########################################################
+            ######### HTML code to display search results ##########
+            ########################################################
+            description = description[:200]+'...'
+            result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr><tr style="border: none;"><h7>{description}</h7></tr><tr style="border: none;"><h6>{""}</h6></tr>'
+            if n>10:
+                 break
         result_str += '</table></html>'
+        count_str = f'<b style="font-size:12px;">Search returned {len(result_list)} results</b>'
+        result_df=pd.DataFrame(result_list)
 
-    #if the status code of the request isn't 200, then an error message is displayed along with an empty data frame
     else:
         result_df = pd.DataFrame({"Title": "", "URL": "", "Description": ""}, index=[0])
         result_str = '<html></html>'
@@ -351,14 +351,15 @@ with st.expander(dict_screen["textInput14"]):
 # partie sur les infos de réparation
 st.subheader(dict_screen["textInput15"])
 
-col1, _, col2=st.columns([5,1,5])
+#col1, _, col2=st.columns([5,1,5])
+#with st.form('Form1'):
 if lang_var=='UK':
     _,topCategory_uk_list=build_pick_up_list(my_data, 'TopCategory')
-    my_final_cat = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk_list)))
+    my_final_cat = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk_list)))
     my_final_cat=my_final_cat.split(' -')[0]
 elif lang_var=='FR':
     _,topCategory_fr_list=build_pick_up_list(my_data, 'TopCategory_FR')
-    my_final_cat_FR = col1.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr_list)))
+    my_final_cat_FR = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr_list)))
     my_final_cat_FR=my_final_cat_FR.split(' -')[0]
     index_in_list=topCategory_fr.index(my_final_cat_FR)
     my_final_cat=topCategory_uk[index_in_list]
@@ -366,24 +367,24 @@ elif lang_var=='FR':
 if lang_var=='UK':
     _, selectObjectList_UK_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
                                                          'product_category_new')
-    my_final_object = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat_list)))
+    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat_list)))
     my_final_object=my_final_object.split(' -')[0]
 
 elif lang_var=='FR':
     _, selectObjectList_FR_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
                                                          'product_category_FR')
-    my_final_object_FR = col2.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat_list)))
+    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat_list)))
     my_final_object_FR=my_final_object_FR.split(' -')[0]
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
 
-col3, _, col4=st.columns([5,1,5])
+#col3, _, col4=st.columns([5,1,5])
 
 _, selectBrandList = build_pick_up_list(my_data[(my_data.TopCategory == my_final_cat) & (my_data.product_category == my_final_object)],
                                                          'brand_ok')
-my_final_brand = col3.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
+my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
 my_final_brand = my_final_brand.split(' -')[0]
-my_age=col4.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
+my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
 
 if my_age=="":
     st.write(dict_screen['textInput12'])
@@ -471,15 +472,16 @@ if col1.button(dict_screen["button1"]):
             st.metric(dict_screen["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
 
 if col2.button(dict_screen["button2"]):
-    if lang_var == 'UK':
-        query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-    elif lang_var == 'FR':
-        my_final_object=my_final_object_FR
-        query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
+    with st.spinner('Wait for it...'):
+        if lang_var == 'UK':
+            query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
+        elif lang_var == 'FR':
+            my_final_object=my_final_object_FR
+            query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
 
-    result_df, result_str, count_str=crawl_query(query)
-    st.markdown(f'{count_str}', unsafe_allow_html=True)
-    st.markdown(f'{result_str}', unsafe_allow_html=True)
+        result_df, result_str, count_str = crawl_query(query)
+        st.markdown(f'{count_str}', unsafe_allow_html=True)
+        st.markdown(f'{result_str}', unsafe_allow_html=True)
 
 st.write("-----------------------------------------------")
 

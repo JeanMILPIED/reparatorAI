@@ -12,8 +12,9 @@ https://reparatorai.streamlit.app/
 1. Tu indiques le type d'objet  
 2. Tu indiques la marque  
 3. Tu indiques l'age de ton objet  
-4. Tu cliques sur "est-ce réparable?" et hop on te répond  
-5. Tu cliques sur "les meilleurs tutos" et hop on te donne les liens des meilleurs tutos video du web pour réparer :)    
+4. Tu indiques le type de panne supposé
+5. Tu cliques sur "est-ce réparable?" et hop on te répond  
+6. Tu cliques sur "les meilleurs tutos" et hop on te donne les liens des meilleurs tutos video du web pour réparer :)    
   
 ****  
 🌱 En plus, la ptite app sympa te donne un équivalent CO2 sauvé si tu répares.  
@@ -23,7 +24,7 @@ https://reparatorai.streamlit.app/
 ### Mais comment est-ce possible ? 🙃  
 Sous le capot, ReparatorAI est branché à une base de données de réparations publique.  
 Cette BDD recense toutes les réparations réalisées dans les repair.Café et autres associations de réparations.  
-En exploitant les statistiques agglomérées sur ces quelques 81000 réparations, il est possible de savoir si un objet est réparable.  
+En exploitant les statistiques agglomérées sur ces quelques 92000 réparations, il est possible de savoir si un objet est réparable.  
 Voilà, tu sais tout !  
 ****  
 

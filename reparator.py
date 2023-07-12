@@ -531,17 +531,20 @@ gif_html = get_img_with_href('CertifiedRefurb_980x400.jpg', SC_ebay)
 st.markdown(gif_html, unsafe_allow_html=True)
 
 st.image("bannerBottom.jpg")
-st.caption('Version 23/06/2023')
+st.caption('Version 12/07/2023')
 if lang_var=='UK':
     st.caption('data source is : https://openrepair.org/open-data/downloads/')
     st.caption('you want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
-
+    st.caption('made with love with Streamlit and python')
+    st.caption("Banner images generated with https://lexica.art")
 elif lang_var=='FR':
     st.caption('lien vers les données sources : https://openrepair.org/open-data/downloads/')
     st.caption("tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
+    st.caption('fait avec Streamlit and python')
+    st.caption("Images générées par LexicaArt : https://lexica.art")
 else:
     st.write ('error')
-st.caption("Banner images generated with https://lexica.art")
+
 
 
 #insert the google analytics or stat_counter

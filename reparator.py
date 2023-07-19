@@ -14,6 +14,9 @@ import pygsheets
 import json
 from google.oauth2 import service_account
 from datetime import datetime
+import warnings
+
+warnings.filterwarnings("ignore")
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')

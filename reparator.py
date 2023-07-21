@@ -186,7 +186,7 @@ def crawl_query(query):
             cite = f'{href[:50]}...' if len(href) >= 50 else href # cite with first 20 chars of the URL
             url_txt = h2.find('a').text #title's text of the individual search result
             #In a few cases few individual search results doesn't have a description. In such cases the description would be blank
-            description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text
+            description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text[3:]
             #Appending the result data frame after processing each individual search result
             result_list.append({"Title": url_txt, "URL": href, "Description": description})
             ########################################################

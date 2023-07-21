@@ -20,9 +20,6 @@ warnings.filterwarnings("ignore")
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
-#with open('.streamlit/secrets.toml', 'r') as file:
-#   json_file=file.read()
-#service_account_info = json.loads(json_file)
 service_account_info=st.secrets["gcp_service_account"]
 my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
 gc = pygsheets.authorize(custom_credentials=my_credentials)
@@ -172,7 +169,7 @@ def get_co2_water_bonus(the_data,the_product, lang_var):
     return the_co2_message, the_water_message, the_bonus_message
 
 def crawl_query(query):
-    req = requests.get(f"https://www.bing.com/search?q={query}"+"&answerCount=5&promote=webpages%2Cvideos", headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'})
+    req = requests.get(f"https://www.bing.com/search?q={query}"+"&answerCount=5&promote=webpages%2Cvideos", headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'})
     result_str = '<html><table style="border: none;">' #Initializing the HTML code for displaying search results
     count_str = ''
     if req.status_code == 200: #Status code 200 indicates a successful request
@@ -199,6 +196,7 @@ def crawl_query(query):
             result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr><tr style="border: none;"><h7>{description}</h7></tr><tr style="border: none;"><h6>{""}</h6></tr>'
             if n>10:
                  break
+
         result_str += '</table></html>'
         count_str = f'<b style="font-size:12px;">Search returned {len(result_list)} results</b>'
         result_df=pd.DataFrame(result_list)

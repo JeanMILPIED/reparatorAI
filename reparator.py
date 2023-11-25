@@ -28,7 +28,7 @@ if lang_var=='UK':
     col11.write('In less than 1 minute, we will be the first to tell you if you can repair. For free, of course !')
     st.write('')
 elif lang_var=='FR':
-    col11.write("En moins d'1 minute, le premier à te dire si ça peut se réparer. Et c'est gratuit !")
+    col11.write("En moins d'1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
     st.write('')
 else:
     st.write('error language')
@@ -161,8 +161,6 @@ elif lang_var=='FR':
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]
 
-#col3, _, col4=st.columns([5,1,5])
-
 _, selectBrandList = build_pick_up_list(my_data[(my_data.TopCategory == my_final_cat) & (my_data.product_category == my_final_object)],
                                                          'brand_ok')
 my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
@@ -189,7 +187,7 @@ if col1.button(dict_screen["button1"]):
         data_dict = build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_var, my_age,
                                             my_pb_cat_selected, other_inputs)
         write_data_in_gsheet_db(data_dict, DB_URL)
-        #try:
+
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
 
@@ -268,7 +266,6 @@ if col2.button(dict_screen["button2"]):
 
 st.write("-----------------------------------------------")
 
-from PIL import Image
 SC_hop="https://www.produitsdurables.fr"
 hop_html = get_img_with_href('Produits-Durables_logo.png', SC_hop)
 col12, col13 = st.columns(2)

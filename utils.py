@@ -13,7 +13,6 @@ import os
 import pygsheets
 import json
 from google.oauth2 import service_account
-from datetime import datetime
 import warnings
 
 #needed to connect to googlesheet db
@@ -24,7 +23,6 @@ gc = pygsheets.authorize(custom_credentials=my_credentials)
 DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"
 
 warnings.filterwarnings("ignore")
-
 
 def clean_df(df):
     df_ok = df
@@ -229,23 +227,21 @@ def build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_
 
 
 def write_data_in_gsheet_db(data_dict, DB_URL):
- #   try:
-    sh = gc.open_by_url(DB_URL)
-    new_data = pd.DataFrame(data_dict)
-    new_data_values = new_data.values.tolist()
-    sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
-  #  except:
-  #      print('error in pushing data to database')
+    try:
+        sh = gc.open_by_url(DB_URL)
+        new_data = pd.DataFrame(data_dict)
+        new_data_values = new_data.values.tolist()
+        sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
+    except:
+        print('error in pushing data to database')
 
 
-# @st.cache(allow_output_mutation=True)
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
 
-# @st.cache(allow_output_mutation=True)
 def get_img_with_href(local_img_path, target_url):
     img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
     bin_str = get_base64_of_bin_file(local_img_path)

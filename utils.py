@@ -16,6 +16,13 @@ from google.oauth2 import service_account
 from datetime import datetime
 import warnings
 
+#needed to connect to googlesheet db
+SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
+service_account_info=st.secrets["gcp_service_account"]
+my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
+gc = pygsheets.authorize(custom_credentials=my_credentials)
+DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"
+
 warnings.filterwarnings("ignore")
 
 
@@ -222,13 +229,13 @@ def build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_
 
 
 def write_data_in_gsheet_db(data_dict, DB_URL):
-    try:
-        sh = gc.open_by_url(DB_URL)
-        new_data = pd.DataFrame(data_dict)
-        new_data_values = new_data.values.tolist()
-        sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
-    except:
-        print('error in pushing data to database')
+ #   try:
+    sh = gc.open_by_url(DB_URL)
+    new_data = pd.DataFrame(data_dict)
+    new_data_values = new_data.values.tolist()
+    sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
+  #  except:
+  #      print('error in pushing data to database')
 
 
 # @st.cache(allow_output_mutation=True)

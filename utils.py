@@ -1,0 +1,246 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+from datetime import datetime
+import csv
+import pathlib
+from bs4 import BeautifulSoup
+import logging
+import shutil
+import requests
+import base64
+import os
+import pygsheets
+import json
+from google.oauth2 import service_account
+from datetime import datetime
+import warnings
+
+warnings.filterwarnings("ignore")
+
+
+def clean_df(df):
+    df_ok = df
+    my_brand_low_freq = df_ok.brand.value_counts()[df_ok.brand.value_counts() < 10].index.tolist()
+    df_ok = df_ok[df_ok.brand.isin(my_brand_low_freq) == False]
+    df_ok['repair_barrier_if_end_of_life'] = df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
+    return df_ok
+
+
+def build_pick_up_list(my_df, my_list_column):
+    print(my_df[[my_list_column]].shape)
+    my_df_valuecounts = my_df[[my_list_column]].iloc[:, 0].value_counts().reset_index()
+    list_out = [str(my_df_valuecounts.iloc[i, 0]) + ' - ' + '({})'.format(my_df_valuecounts.iloc[i, 1]) for i in
+                range(my_df_valuecounts.shape[0])]
+    return my_df_valuecounts, list_out
+
+
+def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
+    if lang_var == 'UK':
+        the_message = ' 🙄 Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
+    elif lang_var == 'FR':
+        the_message = " 🙄 Désolé, pas assez de data pour répondre, mais jette un oeil à l'onglet statistiques pour plus d'infos ⏬"
+    else:
+        st.write('error')
+    my_useful_dataset = my_dataset
+    my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
+    if pb_cat in ['U', 'G']:
+        my_useful_dataset_pbCat = my_useful_dataset
+    else:
+        my_useful_dataset_pbCat = my_useful_dataset[my_useful_dataset['problem_class_main'] == pb_cat]
+
+    my_dataset_brand = my_dataset[my_dataset['brand_ok'] == my_brand]
+    if my_dataset_brand.shape[0] > 0:
+        my_percent_of_repair_brand = round(
+            my_dataset_brand[my_dataset_brand['repair_status'] == 'Fixed'].shape[0] / my_dataset_brand.shape[0], 2)
+    else:
+        my_percent_of_repair_brand = 'not found'
+
+    if my_useful_dataset.shape[0] > 0:
+        my_percent_of_repair_product = round(
+            my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset.shape[0], 2)
+    else:
+        my_percent_of_repair_product = 'not found'
+
+    if my_useful_dataset_pbCat.shape[0] > 0:
+        my_percent_of_repair_product_pbCat = round(
+            my_useful_dataset_pbCat[my_useful_dataset_pbCat['repair_status'] == 'Fixed'].shape[0] /
+            my_useful_dataset_pbCat.shape[0], 2)
+    else:
+        my_percent_of_repair_product_pbCat = 'not found'
+
+    my_useful_dataset = my_useful_dataset[my_useful_dataset['brand_ok'] == my_brand]
+    if my_useful_dataset.shape[0] > 0:
+        my_number_of_machine_brand = my_useful_dataset.shape[0]
+        my_percent_of_repair = round(
+            my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_number_of_machine_brand, 2)
+        my_age_mean_of_machine_brand = round(my_useful_dataset['product_age'].median(), 2)
+
+        # final message
+        if my_number_of_machine_brand > 10:
+            if my_percent_of_repair > 0.5:
+                if lang_var == 'UK':
+                    the_message = ' 😍 YES! Run to repair !'
+                elif lang_var == 'FR':
+                    the_message = ' 😍 OUI! Cours faire réparer !'
+                else:
+                    st.write('error')
+            elif ((my_percent_of_repair < 0.5) & (my_percent_of_repair_product > 0.5)):
+                if lang_var == 'UK':
+                    the_message = '😙 YES! You should try to repair. '
+                elif lang_var == 'FR':
+                    the_message = " 😙 OUI! Tu peux essayer de faire réparer. "
+                else:
+                    st.write('error')
+            else:
+                if lang_var == 'UK':
+                    the_message = '😎 YES, but you need an expert !'
+                elif lang_var == 'FR':
+                    the_message = '😎 OUI, mais il te faut un expert de la réparation !'
+                else:
+                    st.write('error')
+    else:
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product = 'not found', 'not found', 'not found', 'not found'
+
+    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat
+
+
+def find_in_list(the_string, the_list):
+    results = []
+    proper_value = ""
+    the_string_upper = the_string.upper()
+    the_list = [str(my_val).upper().strip() for my_val in the_list]
+    for i, my_place in enumerate(the_list):
+        if the_string_upper in my_place:
+            results.append(my_place)
+        else:
+            pass
+    # we extract the proper place
+    if len(results) == 1:
+        proper_value = results[0]
+    elif len(results) > 1:
+        proper_value = 'pick in the list'
+    else:
+        proper_value = 'not found'
+    return proper_value, results
+
+
+def get_co2_water_bonus(the_data, the_product, lang_var):
+    the_usefull_data = the_data[the_data.product_category == the_product]
+    if lang_var == 'UK':
+        the_co2 = str(the_usefull_data.CO2e.iloc[0]).replace(',', ' to ')
+        the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' to ')
+        the_bonus = 'NO'
+        if 'TBD' in the_co2:
+            the_co2_message = "🌿 CO2: no data on CO2 yet 🙄"
+        else:
+            the_co2_message = "🌿 CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(
+                str(the_co2)[1:-1])
+
+        if 'TBD' in the_water:
+            the_water_message = "💧 WATER: no data on water yet 🙄"
+        else:
+            the_water_message = "💧 WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
+                str(the_water)[1:-1])
+        the_bonus_message = ""
+    elif lang_var == 'FR':
+        the_co2 = str(the_usefull_data.CO2e.iloc[0]).replace(',', ' à ')
+        the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' à ')
+        the_bonus = str(the_usefull_data.Bonus_euros.iloc[0])
+        if 'TBD' in the_co2:
+            the_co2_message = "🌿 CO2: pas encore de data dispo 🙄"
+        else:
+            the_co2_message = "🌿 CO2: si tu répares, {} kg de CO2 évités. La planète te dit merci 💛".format(
+                str(the_co2)[1:-1])
+
+        if 'TBD' in the_water:
+            the_water_message = "💧 EAU: pas encore de data dispo 🙄"
+        else:
+            the_water_message = "💧 EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
+                str(the_water)[1:-1])
+        if the_bonus != 'nan':
+            the_bonus_message = "💰 Eligible au bonus d'état réparation de {} euros*".format(str(the_bonus))
+        else:
+            the_bonus_message = "Cette réparation n'est pas encore éligible au bonus d'état*"
+    else:
+        the_co2_message, the_water_message, the_bonus_message = 'not found', 'not found', "not found"
+    return the_co2_message, the_water_message, the_bonus_message
+
+
+def crawl_query(query):
+    req = requests.get(f"https://www.bing.com/search?q={query}" + "&answerCount=5&promote=webpages%2Cvideos", headers={
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'})
+    result_str = '<html><table style="border: none;">'  # Initializing the HTML code for displaying search results
+    count_str = ''
+    if req.status_code == 200:  # Status code 200 indicates a successful request
+        bs = BeautifulSoup(req.content,
+                           features="html.parser")  # converting the content/text returned by request to a BeautifulSoup object
+        search_result = bs.find_all("li",
+                                    class_="b_algo")  # 'b_algo' is the class of the list object which represents a single result
+        search_result = [str(i).replace("<strong>", "") for i in search_result]  # removing the <strong> tag
+        search_result = [str(i).replace("</strong>", "") for i in search_result]  # removing the </strong> tag
+        result_list = []
+
+        for n, i in enumerate(search_result):  # iterating through the search results
+            individual_search_result = BeautifulSoup(i,
+                                                     features="html.parser")  # converting individual search result into a BeautifulSoup object
+            h2 = individual_search_result.find('h2')  # Finding the title of the individual search result
+            href = h2.find('a').get('href')  # title's URL of the individual search result
+            cite = f'{href[:50]}...' if len(href) >= 50 else href  # cite with first 20 chars of the URL
+            url_txt = h2.find('a').text  # title's text of the individual search result
+            # In a few cases few individual search results doesn't have a description. In such cases the description would be blank
+            description = "" if individual_search_result.find('p') is None else individual_search_result.find('p').text[
+                                                                                3:]
+            # Appending the result data frame after processing each individual search result
+            result_list.append({"Title": url_txt, "URL": href, "Description": description})
+            ########################################################
+            ######### HTML code to display search results ##########
+            ########################################################
+            description = description[:200] + '...'
+            result_str += f'<tr style="border: none;"><h6><a href="{href}" target="_blank">{url_txt}</a></h6></tr><tr style="border: none;"><h7>{description}</h7></tr><tr style="border: none;"><h6>{""}</h6></tr>'
+            if n > 10:
+                break
+
+        result_str += '</table></html>'
+        count_str = f'<b style="font-size:12px;">Search returned {len(result_list)} results</b>'
+        result_df = pd.DataFrame(result_list)
+
+    else:
+        result_df = pd.DataFrame({"Title": "", "URL": "", "Description": ""}, index=[0])
+        result_str = '<html></html>'
+        count_str = '<b style="font-size:20px;">Looks like an error!!</b>'
+
+    return result_df, result_str, count_str
+
+
+def build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_var, my_age, my_pb_cat_selected,
+                            other_inputs):
+    data_dict = {'timestamp': [str(datetime.now())], 'category': [str(my_final_cat)], 'object': [str(my_final_object)],
+                 'brand': [str(my_final_brand)], 'age': [str(my_age)], 'pb_category': [str(my_pb_cat_selected)],
+                 'other_inputs': [str(other_inputs)], 'language': [str(lang_var)]}
+    return data_dict
+
+
+def write_data_in_gsheet_db(data_dict, DB_URL):
+    try:
+        sh = gc.open_by_url(DB_URL)
+        new_data = pd.DataFrame(data_dict)
+        new_data_values = new_data.values.tolist()
+        sh[0].append_table(new_data_values, start='A1', end=None, dimension='ROWS', overwrite=False)
+    except:
+        print('error in pushing data to database')
+
+
+# @st.cache(allow_output_mutation=True)
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+
+# @st.cache(allow_output_mutation=True)
+def get_img_with_href(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    html_code = f'''<a href="{target_url}"><img src="data:image/{img_format};base64,{bin_str}" width="100%" height="auto"/></a>'''
+    return html_code

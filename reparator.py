@@ -138,11 +138,11 @@ st.subheader(dict_screen["textInput15"])
 #with st.form('Form1'):
 if lang_var=='UK':
     _,topCategory_uk_list=build_pick_up_list(my_data, 'TopCategory')
-    my_final_cat = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_uk_list)))
+    my_final_cat = st.selectbox(dict_screen["selectBox0"], tuple(topCategory_uk_list))
     my_final_cat=my_final_cat.split(' -')[0]
 elif lang_var=='FR':
     _,topCategory_fr_list=build_pick_up_list(my_data, 'TopCategory_FR')
-    my_final_cat_FR = st.selectbox(dict_screen["selectBox0"], tuple(sorted(topCategory_fr_list)))
+    my_final_cat_FR = st.selectbox(dict_screen["selectBox0"], tuple(topCategory_fr_list))
     my_final_cat_FR=my_final_cat_FR.split(' -')[0]
     index_in_list=topCategory_fr.index(my_final_cat_FR)
     my_final_cat=topCategory_uk[index_in_list]
@@ -150,13 +150,13 @@ elif lang_var=='FR':
 if lang_var=='UK':
     _, selectObjectList_UK_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
                                                          'product_category_new')
-    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_UK_cat_list)))
+    my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_UK_cat_list))
     my_final_object=my_final_object.split(' -')[0]
 
 elif lang_var=='FR':
     _, selectObjectList_FR_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
                                                          'product_category_FR')
-    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(sorted(selectObjectList_FR_cat_list)))
+    my_final_object_FR = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_FR_cat_list))
     my_final_object_FR=my_final_object_FR.split(' -')[0]
     index_in_list=selectObjectList_FR.index(my_final_object_FR)
     my_final_object=selectObjectList_UK[index_in_list]

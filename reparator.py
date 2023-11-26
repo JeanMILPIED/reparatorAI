@@ -19,7 +19,7 @@ def local_css(filename):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 ######---- main front code here ---
-st.image("bannerTop.jpg")
+st.image("images/bannerTop.jpg")
 col10, col11, col12=st.columns([1,20,4])
 lang_var = col12.radio("",('FR','UK'))
 col11.title('REPARATOR.AI ')
@@ -115,14 +115,14 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
 selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
 
 #nettoyage de dataset source
-my_data=pd.read_csv('OpenRepairData_v0.3_aggregate_202303.csv')
+my_data=pd.read_csv('data/OpenRepairData_v0.3_aggregate_202303.csv')
 my_data['brand']=['-'.join(str(my_brand).upper().strip().split(' ')[0:1]) for my_brand in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_data=clean_df(my_data)
 my_top_cat=''
 my_final_object=''
 my_final_brand=''
-my_co2_w_data=pd.read_csv('df_water_CO2_goods_fill.csv', index_col=0)
+my_co2_w_data=pd.read_csv('data/df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 
 #qui sommes nous
@@ -267,7 +267,7 @@ if col2.button(dict_screen["button2"]):
 st.write("-----------------------------------------------")
 
 SC_hop="https://www.produitsdurables.fr"
-hop_html = get_img_with_href('Produits-Durables_logo.png', SC_hop)
+hop_html = get_img_with_href('images/Produits-Durables_logo.png', SC_hop)
 col12, col13 = st.columns(2)
 col13.markdown(hop_html, unsafe_allow_html=True)
 
@@ -309,10 +309,10 @@ if st.button(dict_screen["textInput10"]):
 SC_ebay = 'https://ebay.us/ZUNSOp'
 
 #ebay banner
-gif_html = get_img_with_href('CertifiedRefurb_980x400.jpg', SC_ebay)
+gif_html = get_img_with_href('images/CertifiedRefurb_980x400.jpg', SC_ebay)
 st.markdown(gif_html, unsafe_allow_html=True)
 
-st.image("bannerBottom.jpg")
+st.image("images/bannerBottom.jpg")
 st.caption('Version 12/07/2023 - ')
 if lang_var=='UK':
     st.caption('Data source is : https://openrepair.org/open-data/downloads/')

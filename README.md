@@ -51,3 +51,5 @@ CO2 impact source: http://www.rdcenvironment.be/wp-content/uploads/2018/10/acv-b
 More content:  
 https://github.com/rub-ksv/MyFixit-Dataset/blob/master/README.md  
 https://github.com/Rav4s/iFixit-Repairability-Dashboard  
+https://github.com/xiongchiamiov/ifixit-repairability-scores  
+https://github.com/xiongchiamiov/pyfixit  

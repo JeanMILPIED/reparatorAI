@@ -31,14 +31,12 @@ def clean_df(df):
     df_ok['repair_barrier_if_end_of_life'] = df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
     return df_ok
 
-
 def build_pick_up_list(my_df, my_list_column):
     print(my_df[[my_list_column]].shape)
     my_df_valuecounts = my_df[[my_list_column]].iloc[:, 0].value_counts().reset_index()
     list_out = [str(my_df_valuecounts.iloc[i, 0]) + ' - ' + '({})'.format(my_df_valuecounts.iloc[i, 1]) for i in
                 range(my_df_valuecounts.shape[0])]
     return my_df_valuecounts, list_out
-
 
 def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
     if lang_var == 'UK':
@@ -48,67 +46,83 @@ def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
     else:
         st.write('error')
     my_useful_dataset = my_dataset
-    my_useful_dataset = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
+    my_useful_dataset_prodcat = my_useful_dataset[my_useful_dataset['product_category'] == my_machine]
+
     if pb_cat in ['U', 'G']:
-        my_useful_dataset_pbCat = my_useful_dataset
+        my_useful_dataset_pbCat = my_useful_dataset_prodcat
     else:
-        my_useful_dataset_pbCat = my_useful_dataset[my_useful_dataset['problem_class_main'] == pb_cat]
+        my_useful_dataset_pbCat = my_useful_dataset_prodcat[my_useful_dataset_prodcat['problem_class_main'] == pb_cat]
 
     my_dataset_brand = my_dataset[my_dataset['brand_ok'] == my_brand]
-    if my_dataset_brand.shape[0] > 0:
-        my_percent_of_repair_brand = round(
-            my_dataset_brand[my_dataset_brand['repair_status'] == 'Fixed'].shape[0] / my_dataset_brand.shape[0], 2)
-    else:
-        my_percent_of_repair_brand = 'not found'
 
-    if my_useful_dataset.shape[0] > 0:
-        my_percent_of_repair_product = round(
-            my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_useful_dataset.shape[0], 2)
-    else:
-        my_percent_of_repair_product = 'not found'
+    my_useful_dataset_prodcat_brand = my_useful_dataset_prodcat[my_useful_dataset_prodcat['brand_ok'] == my_brand]
 
-    if my_useful_dataset_pbCat.shape[0] > 0:
-        my_percent_of_repair_product_pbCat = round(
-            my_useful_dataset_pbCat[my_useful_dataset_pbCat['repair_status'] == 'Fixed'].shape[0] /
-            my_useful_dataset_pbCat.shape[0], 2)
-    else:
-        my_percent_of_repair_product_pbCat = 'not found'
+    if my_useful_dataset_prodcat_brand.shape[0] > 0:
+        my_number_of_machine_brand = my_useful_dataset_prodcat_brand.shape[0]
+        my_age_mean_of_machine_brand = round(my_useful_dataset_prodcat_brand['product_age'].median(), 2)
 
-    my_useful_dataset = my_useful_dataset[my_useful_dataset['brand_ok'] == my_brand]
-    if my_useful_dataset.shape[0] > 0:
-        my_number_of_machine_brand = my_useful_dataset.shape[0]
-        my_percent_of_repair = round(
-            my_useful_dataset[my_useful_dataset['repair_status'] == 'Fixed'].shape[0] / my_number_of_machine_brand, 2)
-        my_age_mean_of_machine_brand = round(my_useful_dataset['product_age'].median(), 2)
-
+    #compute percent_repair and CI
+    PC_repair_brand,CI_repair_brand=PC_CI_repair_success(my_dataset_brand.shape[0],
+                                                         my_dataset_brand[my_dataset_brand["repair_status"]=="Fixed"].shape[0], c_i=90)
+    PC_repair_catprod,CI_repair_catprod=PC_CI_repair_success(my_useful_dataset_prodcat.shape[0],
+                                                         my_useful_dataset_prodcat[my_useful_dataset_prodcat["repair_status"]=="Fixed"].shape[0], c_i=90)
+    PC_repair_catprod_pbcat, CI_repair_catprod_pbcat = PC_CI_repair_success(my_useful_dataset_pbCat.shape[0],
+                                                                my_useful_dataset_pbCat[my_useful_dataset_pbCat[
+                                                                                              "repair_status"] == "Fixed"].shape[0], c_i=90)
+    PC_repair, CI_repair = PC_CI_repair_success(my_useful_dataset_prodcat_brand.shape[0],
+                                                my_useful_dataset_prodcat_brand[my_useful_dataset_prodcat_brand["repair_status"] == "Fixed"].shape[0], c_i=90)
+    try:
+        print(PC_repair_brand, CI_repair_brand)
+        print(PC_repair, CI_repair)
         # final message
         if my_number_of_machine_brand > 10:
-            if my_percent_of_repair > 0.5:
+            if PC_repair-CI_repair >= 0.5:
                 if lang_var == 'UK':
                     the_message = ' 😍 YES! Run to repair !'
                 elif lang_var == 'FR':
                     the_message = ' 😍 OUI! Cours faire réparer !'
                 else:
                     st.write('error')
-            elif ((my_percent_of_repair < 0.5) & (my_percent_of_repair_product > 0.5)):
+            elif ((PC_repair-CI_repair <= 0.5) & (PC_repair_catprod-CI_repair_catprod >= 0.5)):
                 if lang_var == 'UK':
                     the_message = '😙 YES! You should try to repair. '
                 elif lang_var == 'FR':
                     the_message = " 😙 OUI! Tu peux essayer de faire réparer. "
                 else:
                     st.write('error')
-            else:
+            elif ((PC_repair - CI_repair <= 0.5) & (PC_repair_catprod - CI_repair_catprod <= 0.5) & (PC_repair_brand - CI_repair_brand >= 0.5)):
                 if lang_var == 'UK':
                     the_message = '😎 YES, but you need an expert !'
                 elif lang_var == 'FR':
                     the_message = '😎 OUI, mais il te faut un expert de la réparation !'
                 else:
                     st.write('error')
+            else:
+                if lang_var == 'UK':
+                    the_message = '😒 GIVE IT A TRY, with the help of an expert !'
+                elif lang_var == 'FR':
+                    the_message = "😒 A TENTER, avec l'aide d'un expert !"
+                else:
+                    st.write('error')
+    except:
+        my_number_of_machine_brand, my_age_mean_of_machine_brand, PC_repair, PC_repair_catprod = 'not found', 'not found', 'not found', 'not found'
+
+    return my_number_of_machine_brand, my_age_mean_of_machine_brand, PC_repair, my_useful_dataset_prodcat_brand, PC_repair_catprod, PC_repair_brand, the_message, PC_repair_catprod_pbcat
+
+def PC_CI_repair_success(n_product,n_repair, c_i=90):
+    if n_product >0:
+        if c_i == 90:
+            z_factor=1.645
+        elif c_i ==95:
+            z_factor=1.96
+        else:
+            z_factor=1.645
+
+        proba_success=round(n_repair/n_product,2)
+        proba_interval= round(z_factor / (n_product * n_product **0.5)*(n_repair*(n_product-n_repair))**0.5,2)
+        return proba_success, proba_interval
     else:
-        my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_percent_of_repair_product = 'not found', 'not found', 'not found', 'not found'
-
-    return my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, my_useful_dataset, my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat
-
+        return "not found","not found"
 
 def find_in_list(the_string, the_list):
     results = []
@@ -128,7 +142,6 @@ def find_in_list(the_string, the_list):
     else:
         proper_value = 'not found'
     return proper_value, results
-
 
 def get_co2_water_bonus(the_data, the_product, lang_var):
     the_usefull_data = the_data[the_data.product_category == the_product]
@@ -171,7 +184,6 @@ def get_co2_water_bonus(the_data, the_product, lang_var):
         the_co2_message, the_water_message, the_bonus_message = 'not found', 'not found', "not found"
     return the_co2_message, the_water_message, the_bonus_message
 
-
 def crawl_query(query):
     req = requests.get(f"https://www.bing.com/search?q={query}" + "&answerCount=5&promote=webpages%2Cvideos", headers={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'})
@@ -205,7 +217,6 @@ def crawl_query(query):
         result_str += '</table></html>'
         count_str = f'<b style="font-size:12px;">Search returned {len(result_list)} results</b>'
         result_df = pd.DataFrame(result_list)
-
     else:
         result_df = pd.DataFrame({"Title": "", "URL": "", "Description": ""}, index=[0])
         result_str = '<html></html>'
@@ -213,14 +224,12 @@ def crawl_query(query):
 
     return result_df, result_str, count_str
 
-
 def build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_var, my_age, my_pb_cat_selected,
                             other_inputs):
     data_dict = {'timestamp': [str(datetime.now())], 'category': [str(my_final_cat)], 'object': [str(my_final_object)],
                  'brand': [str(my_final_brand)], 'age': [str(my_age)], 'pb_category': [str(my_pb_cat_selected)],
                  'other_inputs': [str(other_inputs)], 'language': [str(lang_var)]}
     return data_dict
-
 
 def write_data_in_gsheet_db(data_dict, DB_URL):
     try:
@@ -231,12 +240,10 @@ def write_data_in_gsheet_db(data_dict, DB_URL):
     except:
         print('error in pushing data to database')
 
-
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
-
 
 def get_img_with_href(local_img_path, target_url):
     img_format = os.path.splitext(local_img_path)[-1].replace('.', '')

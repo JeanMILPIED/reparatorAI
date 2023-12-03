@@ -52,4 +52,5 @@ More content:
 https://github.com/rub-ksv/MyFixit-Dataset/blob/master/README.md  
 https://github.com/Rav4s/iFixit-Repairability-Dashboard  
 https://github.com/xiongchiamiov/ifixit-repairability-scores  
-https://github.com/xiongchiamiov/pyfixit  
+https://github.com/xiongchiamiov/pyfixit 
+https://fr.ifixit.com/News/80361/ifixit-vs-french-repairability-score 

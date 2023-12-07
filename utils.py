@@ -72,25 +72,27 @@ def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
     PC_repair, CI_repair = PC_CI_repair_success(my_useful_dataset_prodcat_brand.shape[0],
                                                 my_useful_dataset_prodcat_brand[my_useful_dataset_prodcat_brand["repair_status"] == "Fixed"].shape[0], c_i=90)
     try:
-        print(PC_repair_brand, CI_repair_brand)
-        print(PC_repair, CI_repair)
+        # print(PC_repair_brand, CI_repair_brand)
+        # print(PC_repair, CI_repair)
         # final message
         if my_number_of_machine_brand > 10:
-            if PC_repair-CI_repair >= 0.5:
+            magic_repair= magic_number( PC_repair_brand,CI_repair_brand,PC_repair_catprod,CI_repair_catprod, PC_repair_catprod_pbcat,
+                  CI_repair_catprod_pbcat, PC_repair, CI_repair)
+            if magic_repair > 0.55:
                 if lang_var == 'UK':
                     the_message = ' 😍 YES! Run to repair !'
                 elif lang_var == 'FR':
                     the_message = ' 😍 OUI! Cours faire réparer !'
                 else:
                     st.write('error')
-            elif ((PC_repair-CI_repair <= 0.5) & (PC_repair_catprod-CI_repair_catprod >= 0.5)):
+            elif 0.4<magic_repair<=0.55:
                 if lang_var == 'UK':
                     the_message = '😙 YES! You should try to repair. '
                 elif lang_var == 'FR':
                     the_message = " 😙 OUI! Tu peux essayer de faire réparer. "
                 else:
                     st.write('error')
-            elif ((PC_repair - CI_repair <= 0.5) & (PC_repair_catprod - CI_repair_catprod <= 0.5) & (PC_repair_brand - CI_repair_brand >= 0.5)):
+            elif 0.3<magic_repair<=0.4:
                 if lang_var == 'UK':
                     the_message = '😎 YES, but you need an expert !'
                 elif lang_var == 'FR':
@@ -104,6 +106,13 @@ def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
                     the_message = "😒 A TENTER, avec l'aide d'un expert !"
                 else:
                     st.write('error')
+        else:
+            if lang_var == 'UK':
+                the_message = ' 😉 Very rare product in our base but try to repair !'
+            elif lang_var == 'FR':
+                the_message = ' 😉 Produit rare dans notre base mais pourquoi pas tenter !'
+            else:
+                st.write('error')
     except:
         my_number_of_machine_brand, my_age_mean_of_machine_brand, PC_repair, PC_repair_catprod = 'not found', 'not found', 'not found', 'not found'
 
@@ -123,6 +132,15 @@ def PC_CI_repair_success(n_product,n_repair, c_i=90):
         return proba_success, proba_interval
     else:
         return "not found","not found"
+
+def magic_number( PC_repair_brand,CI_repair_brand,PC_repair_catprod,CI_repair_catprod, PC_repair_catprod_pbcat,
+                  CI_repair_catprod_pbcat, PC_repair, CI_repair):
+    vector=[0.335,0.4069,0.2356,0.01]
+    magic_number=(PC_repair-CI_repair)*vector[0]+(PC_repair_brand-CI_repair_brand)*vector[1]+\
+                 (PC_repair_catprod-CI_repair_catprod)*vector[2] + (PC_repair_catprod_pbcat-CI_repair_catprod_pbcat)*vector[3]
+    magic_number=magic_number/sum(vector)
+    print(magic_number)
+    return magic_number
 
 def find_in_list(the_string, the_list):
     results = []

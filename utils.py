@@ -152,6 +152,14 @@ def lognormal_cdf(x, mu, sigma):
     cdf = 0.5 * (1 + erf((math.log(x) - mu) / (math.sqrt(2) * sigma)))
     return cdf
 
+def compute_proba_fail(my_final_object,my_age,my_logN_data):
+    x= float(my_age)+0.1
+    sigma=my_logN_data[my_logN_data.prod_cat==my_final_object].sigma.values[0]
+    mu=my_logN_data[my_logN_data.prod_cat==my_final_object].mu.values[0]
+    proba=lognormal_cdf(x, mu, sigma)
+    proba=round(proba*100,0)
+    return proba
+
 def find_in_list(the_string, the_list):
     results = []
     proper_value = ""

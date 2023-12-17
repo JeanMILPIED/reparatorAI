@@ -124,6 +124,7 @@ my_final_object=''
 my_final_brand=''
 my_co2_w_data=pd.read_csv('data/df_water_CO2_goods_fill.csv', index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
+my_logN_data=pd.read_csv('data/lognormal_fit_cat_202312.csv', index_col=0)
 
 #qui sommes nous
 with st.expander(dict_screen["textInput14"]):
@@ -189,6 +190,7 @@ if col1.button(dict_screen["button1"]):
         write_data_in_gsheet_db(data_dict, DB_URL)
 
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
+        proba_fail=compute_proba_fail(my_final_object,my_age,my_logN_data)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
 
     st.write('-----------------------------------')
@@ -205,6 +207,7 @@ if col1.button(dict_screen["button1"]):
         st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_brand, my_final_object, my_age_print, the_letter))
         st.subheader(the_message)
         st.subheader(the_bonus_message)
+        st.write("INFO: computed probability of failure at this age is {}%".format(proba_fail))
     elif lang_var=='FR':
         if float(my_age) == 0:
             the_letter=''
@@ -218,6 +221,7 @@ if col1.button(dict_screen["button1"]):
         st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age_print, the_letter))
         st.subheader(the_message)
         st.subheader(the_bonus_message)
+        st.write("INFO: la probabilité de tomber en panne à cet âge est de {}%".format(proba_fail))
         st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
     st.write(the_co2_message)
     st.write(the_water_message)

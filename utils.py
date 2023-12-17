@@ -14,6 +14,8 @@ import pygsheets
 import json
 from google.oauth2 import service_account
 import warnings
+import math
+from scipy.special import erf
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
@@ -141,6 +143,14 @@ def magic_number( PC_repair_brand,CI_repair_brand,PC_repair_catprod,CI_repair_ca
     magic_number=magic_number/sum(vector)
     print(magic_number)
     return magic_number
+
+def lognormal_cdf(x, mu, sigma):
+    if x <= 0:
+        return 0.0  # CDF is 0 for x <= 0
+
+    # Calculate the CDF for the lognormal distribution
+    cdf = 0.5 * (1 + erf((math.log(x) - mu) / (math.sqrt(2) * sigma)))
+    return cdf
 
 def find_in_list(the_string, the_list):
     results = []

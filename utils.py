@@ -25,8 +25,8 @@ DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-m
 warnings.filterwarnings("ignore")
 
 def clean_df(df):
-    df_ok = df
-    my_brand_low_freq = df_ok.brand.value_counts()[df_ok.brand.value_counts() < 10].index.tolist()
+    df_ok = df.copy()
+    my_brand_low_freq = df_ok.brand.value_counts()[df_ok.brand.value_counts() < 5].index.tolist()
     df_ok = df_ok[df_ok.brand.isin(my_brand_low_freq) == False]
     df_ok['repair_barrier_if_end_of_life'] = df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')
     return df_ok
@@ -53,9 +53,9 @@ def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
     else:
         my_useful_dataset_pbCat = my_useful_dataset_prodcat[my_useful_dataset_prodcat['problem_class_main'] == pb_cat]
 
-    my_dataset_brand = my_dataset[my_dataset['brand_ok'] == my_brand]
+    my_dataset_brand = my_dataset[my_dataset['brand'] == my_brand]
 
-    my_useful_dataset_prodcat_brand = my_useful_dataset_prodcat[my_useful_dataset_prodcat['brand_ok'] == my_brand]
+    my_useful_dataset_prodcat_brand = my_useful_dataset_prodcat[my_useful_dataset_prodcat['brand'] == my_brand]
 
     if my_useful_dataset_prodcat_brand.shape[0] > 0:
         my_number_of_machine_brand = my_useful_dataset_prodcat_brand.shape[0]

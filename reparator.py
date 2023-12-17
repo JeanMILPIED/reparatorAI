@@ -54,7 +54,7 @@ if lang_var=='UK':
                  "textInput13" : "6️⃣ OTHER USEFUL INFO here",
                  "textInput14" : "About ReparatorAI 👓",
                  "textInput15" : "Should I repair or should I throw ? ⁉",
-                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 92000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
+                 "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 100'000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
                  "textInput17": "5️⃣ THE PROBLEM looks like :",
                  "textInput18": '{} REPAIR SUCCESS RATE (%)',
                  "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT',
@@ -81,7 +81,7 @@ elif lang_var=='FR':
                  "textInput13" : "6️⃣ AUTRE INFO UTILE ici",
                  "textInput14" : "Tout sur ReparatorAI 👓",
                  "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! ⁉",
-                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 92000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                 "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 100'000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                  "textInput17": "5️⃣ LA PANNE a l'air d'être d'origine :",
                  "textInput18": "% DE SUCCES DE REPARATION {} ",
                  "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE",
@@ -115,7 +115,7 @@ selectObjectList_FR=['Outil Bricolage', 'Jouet', 'Sèche cheveux', 'Luminaires e
 selectObjectList_FR=[my_str.upper() for my_str in selectObjectList_FR]
 
 #nettoyage de dataset source
-my_data=pd.read_csv('data/OpenRepairData_v0.3_aggregate_202303.csv')
+my_data=pd.read_csv('data/OpenRepairData_v0.3_aggregate_202309.csv')
 my_data['brand']=['-'.join(str(my_brand).upper().strip().split(' ')[0:1]) for my_brand in my_data.brand]
 my_data['product_category']=[str(my_val).upper().strip() for my_val in my_data.product_category]
 my_data=clean_df(my_data)
@@ -149,7 +149,7 @@ elif lang_var=='FR':
 
 if lang_var=='UK':
     _, selectObjectList_UK_cat_list = build_pick_up_list(my_data[my_data.TopCategory == my_final_cat],
-                                                         'product_category_new')
+                                                         'product_category')
     my_final_object = st.selectbox(dict_screen["selectBox1"], tuple(selectObjectList_UK_cat_list))
     my_final_object=my_final_object.split(' -')[0]
 
@@ -162,7 +162,7 @@ elif lang_var=='FR':
     my_final_object=selectObjectList_UK[index_in_list]
 
 _, selectBrandList = build_pick_up_list(my_data[(my_data.TopCategory == my_final_cat) & (my_data.product_category == my_final_object)],
-                                                         'brand_ok')
+                                                         'brand')
 my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
 my_final_brand = my_final_brand.split(' -')[0]
 my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")

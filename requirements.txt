@@ -46,5 +46,5 @@ requests==2.27.1
 Send2Trash==1.8.0
 scipy
 smmap==5.0.0
-streamlit==1.8.1
+streamlit
 urllib3==1.26.9

@@ -318,7 +318,7 @@ gif_html = get_img_with_href('images/CertifiedRefurb_980x400.jpg', SC_ebay)
 st.markdown(gif_html, unsafe_allow_html=True)
 
 st.image("images/bannerBottom.jpg")
-st.caption('Version 12/07/2023 - ')
+st.caption('Version 17/12/2023 - ')
 if lang_var=='UK':
     st.caption('Data source is : https://openrepair.org/open-data/downloads/')
     st.caption('You want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')

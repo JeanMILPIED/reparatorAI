@@ -287,6 +287,7 @@ with st.expander(dict_screen["textInput11"]):
     st.write('ENVIE: https://www.envie.org/sequiper-reparer/')
     st.write('iFIXIT: https://fr.ifixit.com/')
     st.write('LeSitedeLaPiece: https://www.lesitedelapiece.com/content/8-tous-nos-appareils')
+    st.write('LONGUE VIE AUX OBJETS (ADEME): https://longuevieauxobjets.ademe.fr/')
     st.write('MURFY: https://murfy.fr/')
     st.write('PRODUITS DURABLES: https://www.produitsdurables.fr/')
     st.write('REPAIR CAFE: https://www.repaircafe.org/fr/')

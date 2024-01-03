@@ -166,7 +166,8 @@ _, selectBrandList = build_pick_up_list(my_data[(my_data.TopCategory == my_final
                                                          'brand')
 my_final_brand = st.selectbox(dict_screen["selectBox2"], tuple(selectBrandList))
 my_final_brand = my_final_brand.split(' -')[0]
-my_age=st.text_input(dict_screen["textInput3"], value=0, max_chars=None, key=None, type="default")
+my_age=st.number_input(dict_screen["textInput3"], value=0, min_value=0, max_value=99, key=None, step=1)
+
 
 if my_age=="":
     st.write(dict_screen['textInput12'])

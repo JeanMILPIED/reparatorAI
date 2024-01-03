@@ -122,7 +122,7 @@ my_data=clean_df(my_data)
 my_top_cat=''
 my_final_object=''
 my_final_brand=''
-my_co2_w_data=pd.read_csv('data/df_water_CO2_goods_fill.csv', index_col=0)
+my_co2_w_data=pd.read_csv('data/df_water_CO2_goods_fill.csv', sep=';', encoding='latin',index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 my_logN_data=pd.read_csv('data/lognormal_fit_cat_202312.csv', index_col=0)
 

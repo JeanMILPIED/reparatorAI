@@ -28,6 +28,8 @@ warnings.filterwarnings("ignore")
 
 def clean_df(df):
     df_ok = df.copy()
+    df_ok['brand'] = ['-'.join(str(my_brand).upper().strip().split(' ')[0:1]) for my_brand in df_ok.brand]
+    df_ok['product_category'] = [str(my_val).upper().strip() for my_val in df_ok.product_category]
     my_brand_low_freq = df_ok.brand.value_counts()[df_ok.brand.value_counts() < 5].index.tolist()
     df_ok = df_ok[df_ok.brand.isin(my_brand_low_freq) == False]
     df_ok['repair_barrier_if_end_of_life'] = df_ok['repair_barrier_if_end_of_life'].fillna('Unspecified')

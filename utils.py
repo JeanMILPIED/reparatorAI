@@ -181,6 +181,35 @@ def find_in_list(the_string, the_list):
         proper_value = 'not found'
     return proper_value, results
 
+def get_random_row(dataset):
+    """
+    Get a random row from the dataset.
+
+    Args:
+    - dataset: A list of lists or a pandas DataFrame representing the dataset.
+
+    Returns:
+    - A random row from the dataset.
+    """
+    if isinstance(dataset, list):
+        return random.choice(dataset)
+    elif isinstance(dataset, pd.DataFrame):
+        return dataset.sample(n=1)
+    else:
+        raise TypeError("Dataset should be a list of lists or a pandas DataFrame.")
+
+def get_quote(the_data, the_product, lang_var):
+    the_data_ok=the_data[the_data.lang==lang_var]
+    the_data_ok=the_data_ok[the_data_ok.Equipment==the_product]
+    num=the_data_ok.shape[0]
+    the_quote=get_random_row(the_data_ok)
+    author=the_quote.Author.values[0]
+    quote=the_quote.quote.values[0]
+    quote="##### "+quote
+    author="*"+author+"*"
+    return author, quote
+
+
 def get_co2_water_bonus(the_data, the_product, lang_var):
     the_usefull_data = the_data[the_data.product_category == the_product]
     if lang_var == 'UK':

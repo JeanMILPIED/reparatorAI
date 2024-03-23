@@ -125,6 +125,7 @@ my_final_brand=''
 my_co2_w_data=pd.read_csv('data/df_water_CO2_goods_fill.csv', sep=';', encoding='latin',index_col=0)
 my_co2_w_data['product_category'] = [str(my_val).upper().strip() for my_val in my_co2_w_data.index]
 my_logN_data=pd.read_csv('data/lognormal_fit_cat_202312.csv', index_col=0)
+my_quotes_data=pd.read_csv('data/quotes.csv', sep=';', encoding='latin')
 
 #qui sommes nous
 with st.expander(dict_screen_all[lang_var]["textInput14"]):
@@ -169,6 +170,10 @@ other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value="",
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen_all[lang_var]["button1"]):
+    st.write('-----------------------------------')
+    the_author, the_quote = get_quote(my_quotes_data, my_final_object, lang_var)
+    st.write(the_quote)
+    st.write(the_author)
     with st.spinner('Wait for it...'):
         # write in db googlesheet
         data_dict = build_data_dict_to_push(my_final_cat, my_final_object, my_final_brand, lang_var, my_age,
@@ -178,6 +183,7 @@ if col1.button(dict_screen_all[lang_var]["button1"]):
         my_number_of_machine_brand, my_age_mean_of_machine_brand, my_percent_of_repair, useful_data , my_percent_of_repair_product, my_percent_of_repair_brand, the_message, my_percent_of_repair_product_pbCat= extract_info_machine(my_data, my_final_object, my_final_brand, lang_var, my_pb_cat_val)
         proba_fail=compute_proba_fail(my_final_object,my_age,my_logN_data)
         the_co2_message, the_water_message, the_bonus_message = get_co2_water_bonus(my_co2_w_data, my_final_object, lang_var)
+
 
     st.write('-----------------------------------')
     if lang_var=="UK":
@@ -239,7 +245,7 @@ if col1.button(dict_screen_all[lang_var]["button1"]):
         if (my_percent_of_repair_product != 'not found'):
             st.metric(dict_screen_all[lang_var]["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
                         delta=None, delta_color="normal")
-            
+
         if (my_percent_of_repair_brand != 'not found'):
             st.metric(dict_screen_all[lang_var]["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
 

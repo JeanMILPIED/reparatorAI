@@ -16,6 +16,7 @@ from google.oauth2 import service_account
 import warnings
 import math
 from scipy.special import erf
+import time
 
 #needed to connect to googlesheet db
 SCOPES = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
@@ -44,9 +45,9 @@ def build_pick_up_list(my_df, my_list_column):
 
 def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
     if lang_var == 'UK':
-        the_message = ' 🙄 Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
+        the_message = ' 🙄 ###### Sorry, too few data to answer. Have a look in the statistics zone for more info ⏬. '
     elif lang_var == 'FR':
-        the_message = " 🙄 Désolé, pas assez de data pour répondre, mais jette un oeil à l'onglet statistiques pour plus d'infos ⏬"
+        the_message = " 🙄 ###### Désolé, pas assez de data pour répondre, mais jette un oeil à l'onglet statistiques pour plus d'infos ⏬"
     else:
         st.write('error')
     my_useful_dataset = my_dataset
@@ -84,37 +85,37 @@ def extract_info_machine(my_dataset, my_machine, my_brand, lang_var, pb_cat):
                   CI_repair_catprod_pbcat, PC_repair, CI_repair)
             if magic_repair > 0.55:
                 if lang_var == 'UK':
-                    the_message = ' 😍 YES! Run to repair !'
+                    the_message = '##### 😍 YES! Run to repair !'
                 elif lang_var == 'FR':
-                    the_message = ' 😍 OUI! Cours faire réparer !'
+                    the_message = '##### 😍 OUI! Cours faire réparer !'
                 else:
                     st.write('error')
             elif 0.4<magic_repair<=0.55:
                 if lang_var == 'UK':
-                    the_message = '😙 YES! You should try to repair. '
+                    the_message = '##### 😙 YES! You should try to repair. '
                 elif lang_var == 'FR':
-                    the_message = " 😙 OUI! Tu peux essayer de faire réparer. "
+                    the_message = "##### 😙 OUI! Tu peux essayer de faire réparer. "
                 else:
                     st.write('error')
             elif 0.3<magic_repair<=0.4:
                 if lang_var == 'UK':
-                    the_message = '😎 YES, but you need an expert !'
+                    the_message = '##### 😎 YES, but you need an expert !'
                 elif lang_var == 'FR':
-                    the_message = '😎 OUI, mais il te faut un expert de la réparation !'
+                    the_message = '##### 😎 OUI, mais il te faut un expert de la réparation !'
                 else:
                     st.write('error')
             else:
                 if lang_var == 'UK':
-                    the_message = '😒 GIVE IT A TRY, with the help of an expert !'
+                    the_message = '##### 😒 GIVE IT A TRY, with the help of an expert !'
                 elif lang_var == 'FR':
-                    the_message = "😒 A TENTER, avec l'aide d'un expert !"
+                    the_message = "##### 😒 A TENTER, avec l'aide d'un expert !"
                 else:
                     st.write('error')
         else:
             if lang_var == 'UK':
-                the_message = ' 😉 Very rare product in our base but try to repair !'
+                the_message = '##### 😉 Very rare product in our base but try to repair !'
             elif lang_var == 'FR':
-                the_message = ' 😉 Produit rare dans notre base mais pourquoi pas tenter !'
+                the_message = '##### 😉 Produit rare dans notre base mais pourquoi pas tenter !'
             else:
                 st.write('error')
     except:
@@ -217,15 +218,15 @@ def get_co2_water_bonus(the_data, the_product, lang_var):
         the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' to ')
         the_bonus = 'NO'
         if 'TBD' in the_co2:
-            the_co2_message = "🌿 CO2: no data on CO2 yet 🙄"
+            the_co2_message = "🌿 **CO2**: no data on CO2 yet 🙄"
         else:
-            the_co2_message = "🌿 CO2: if repaired, you'll save {} kg of CO2. Planet Earth will thank you 🌍🌎🌏".format(
+            the_co2_message = "🌿 **CO2**: if repaired, you'll save **{} kg of CO2**. Planet Earth will thank you 🌍🌎🌏".format(
                 str(the_co2)[1:-1])
 
         if 'TBD' in the_water:
-            the_water_message = "💧 WATER: no data on water yet 🙄"
+            the_water_message = "💧 **WATER**: no data on water yet 🙄"
         else:
-            the_water_message = "💧 WATER: if repaired, you'll save {} L of water. Planet Earth will thank you 🐬🐳🐋".format(
+            the_water_message = "💧 **WATER**: if repaired, you'll save **{} L of water**. Planet Earth will thank you 🐬🐳🐋".format(
                 str(the_water)[1:-1])
         the_bonus_message = ""
     elif lang_var == 'FR':
@@ -233,18 +234,18 @@ def get_co2_water_bonus(the_data, the_product, lang_var):
         the_water = str(the_usefull_data.water_L.iloc[0]).replace(',', ' à ')
         the_bonus = str(the_usefull_data.Bonus_euros.iloc[0])
         if 'TBD' in the_co2:
-            the_co2_message = "🌿 CO2: pas encore de data dispo 🙄"
+            the_co2_message = "🌿 **CO2**: pas encore de data dispo 🙄"
         else:
-            the_co2_message = "🌿 CO2: si tu répares, {} kg de CO2 évités. La planète te dit merci 💛".format(
+            the_co2_message = "🌿 **CO2**: si tu répares, **{} kg de CO2** évités. La planète te dit merci 💛".format(
                 str(the_co2)[1:-1])
 
         if 'TBD' in the_water:
-            the_water_message = "💧 EAU: pas encore de data dispo 🙄"
+            the_water_message = "💧 **EAU**: pas encore de data dispo 🙄"
         else:
-            the_water_message = "💧 EAU: si tu répares, {} L d'eau évitées. La planète te dit merci 🐬🐳🐋".format(
+            the_water_message = "💧 **EAU**: si tu répares, **{} L d'eau** évitées. La planète te dit merci 🐬🐳🐋".format(
                 str(the_water)[1:-1])
         if the_bonus != 'nan':
-            the_bonus_message = "💰 Eligible au bonus d'état réparation de {} euros*".format(str(the_bonus))
+            the_bonus_message = "💰 Eligible au **bonus** d'état réparation de **{} euros** *".format(str(the_bonus))
         else:
             the_bonus_message = "Cette réparation n'est pas encore éligible au bonus d'état*"
     else:
@@ -317,3 +318,18 @@ def get_img_with_href(local_img_path, target_url):
     bin_str = get_base64_of_bin_file(local_img_path)
     html_code = f'''<a href="{target_url}"><img src="data:image/{img_format};base64,{bin_str}" width="100%" height="auto"/></a>'''
     return html_code
+
+def gen_list(input_list):
+    for input in input_list:
+        yield input +" "
+
+def bot_style(theResponse):
+    # Simulate stream of response with milliseconds delay
+    full_response = ""
+    message_placeholder = st.empty()
+    for chunk in theResponse.split():
+        full_response += chunk + " "
+        time.sleep(0.1)
+        # Add a blinking cursor to simulate typing
+        message_placeholder.markdown(full_response + "▌")
+    message_placeholder.markdown(full_response)

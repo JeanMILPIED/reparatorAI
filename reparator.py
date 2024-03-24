@@ -1,6 +1,7 @@
 import streamlit as st
 import pygsheets
 from google.oauth2 import service_account
+import time
 
 from utils import *
 
@@ -17,29 +18,31 @@ def local_css(filename):
     with open(filename) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+emoji_list=["🎸","📻","🛠","📠","☎","🖨","💻","🖥","🖱","📸","📺","⌚","🕹","🎮","🎤","🎧","😎","🌎"]
+
 ######---- main front code here ---
 st.image("images/bannerTop.jpg")
 col10, col11, col12=st.columns([1,20,4])
 lang_var = col12.radio("",('FR','UK'))
-col11.title('REPARATOR.AI ')
+col11.title('REPARATOR.AI')
 
 if lang_var=='UK':
-    col11.write('In less than 1 minute, we will be the first to tell you if you can repair. For free, of course !')
+    col11.write('*In less than 1 minute, we will be the first to tell you if you can repair. For free, of course !*')
     st.write('')
 elif lang_var=='FR':
-    col11.write("En moins d'1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !")
+    col11.write("*En moins d'1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !*")
     st.write('')
 else:
     st.write('error language')
 
 dict_screen_all={"UK":
-                     {"selectBox0":"1️⃣ CATEGORY",
-                     "selectBox1":"2️⃣ OBJECT TYPE",
+                     {"selectBox0":"1️⃣ **CATEGORY**",
+                     "selectBox1":"2️⃣ **OBJECT TYPE**",
                      "textInput1":"BRAND",
-                     "selectBox2":'3️⃣ BRAND',
+                     "selectBox2":'3️⃣ **BRAND**',
                      "textInput2":'NOT FOUND !',
-                     "textInput3": "4️⃣ AGE (years)",
-                     "button1": "Let's find repairs! 🛠 ",
+                     "textInput3": "4️⃣ **AGE** (years)",
+                     "button1": "**Let's find repairs !** 🛠 ",
                      "button2": "Best repair tutorials on the web 🚀",
                      "textInput4":'THE STATISTICS BEHIND IT in our database',
                      "textInput5":'# FAILED {} {}',
@@ -50,23 +53,23 @@ dict_screen_all={"UK":
                      "textInput10":"🦄 Send me a comment!",
                      "textInput11":"🐓 French Actors for Repair",
                      "textInput12":"⚠ Age is missing",
-                     "textInput13" : "6️⃣ OTHER USEFUL INFO here",
+                     "textInput13" : "6️⃣ **OTHER USEFUL INFO** here",
                      "textInput14" : "About ReparatorAI 👓",
-                     "textInput15" : "Should I repair or should I throw ? ⁉",
-                     "textInput16": "Created in 2022, ReparatorAI is a free tool based on opendata. A database of more than 100'000 repairs is analysed at every request to offer you best advice about your broken object. Today, more than 1000 people use it worldwide.",
-                     "textInput17": "5️⃣ THE PROBLEM looks like :",
+                     "textInput15" : "#### Should I repair or should I throw ? ⁉",
+                     "textInput16": "Created in 2022, **ReparatorAI** is a **free tool** based on opendata. A database of more than 100'000 repairs is analysed at every request to offer you **best advice** about your broken object. Today, more than 1000 people use it worldwide.",
+                     "textInput17": "5️⃣ **THE PROBLEM** looks like :",
                      "textInput18": '{} REPAIR SUCCESS RATE (%)',
                      "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT',
-                     "textInput20": 'Today in our database, you will find {} repair events on {} equipment types from {} different brands. Go for an exploration ⏬'
+                     "textInput20": 'Today in our database, you will find **{} repair events on {} equipment types from {} different brands**. Go for an exploration ⏬'
                      },
                  "FR":
-                    {"selectBox0":"1️⃣ CATEGORIE",
-                     "selectBox1":"2️⃣ TYPE D'OBJET ",
+                    {"selectBox0":"1️⃣ **CATEGORIE**",
+                     "selectBox1":"2️⃣ **TYPE D'OBJET** ",
                      "textInput1":"MARQUE",
-                     "selectBox2":"3️⃣ MARQUE",
+                     "selectBox2":"3️⃣ **MARQUE**",
                      "textInput2":'PAS TROUVé !',
-                     "textInput3": "4️⃣ AGE (en années)",
-                     "button1": "Voyons si c'est réparable ! 🛠 ",
+                     "textInput3": "4️⃣ **AGE** (en années)",
+                     "button1": "**Voyons si c'est réparable !** 🛠 ",
                      "button2": "Les meilleurs Tutos du Web 🚀",
                      "textInput4": 'STATISTIQUES DE PANNES dans notre database',
                      "textInput5": "NOMBRE DE {} {} EN PANNE",
@@ -77,14 +80,14 @@ dict_screen_all={"UK":
                      "textInput10": " 🦄 Envoie-moi un avis!",
                      "textInput11": " 🐓 Les acteurs Français de la réparation",
                      "textInput12" : "⚠ Indiquez l'Age de la machine",
-                     "textInput13" : "6️⃣ AUTRE INFO UTILE ici",
+                     "textInput13" : "6️⃣ **AUTRE INFO UTILE** ici",
                      "textInput14" : "Tout sur ReparatorAI 👓",
-                     "textInput15" : "Dis-moi que je peux réparer mon objet en panne ! ⁉",
-                     "textInput16" : "Conçu en 2022, ReparatorAI est un outil gratuit basé sur de l'opendata. Une base de donnée de plus de 100'000 réparations est analysée à chaque requète pour t'informer du meilleur choix face à une panne. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
-                     "textInput17": "5️⃣ LA PANNE a l'air d'être d'origine :",
+                     "textInput15" : "#### Dis-moi que je peux réparer mon objet en panne ! ⁉",
+                     "textInput16" : "Conçu en 2022, **ReparatorAI** est un outil **gratuit** basé sur de l'opendata. Une base de donnée de plus de 100'000 réparations est analysée à chaque requète pour t'informer du **meilleur choix face à une panne**. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                     "textInput17": "5️⃣ **LA PANNE** a l'air d'être d'origine :",
                      "textInput18": "% DE SUCCES DE REPARATION {} ",
                      "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE",
-                     "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras {} réparations portant sur {} types d'équipements de {} marques différentes. L'exploration c'est par là ⏬"
+                     "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras **{} réparations portant sur {} types d'équipements de {} marques différentes**. L'exploration c'est par là ⏬"
                      }
                  }
 
@@ -134,7 +137,7 @@ with st.expander(dict_screen_all[lang_var]["textInput14"]):
                                                len(my_data.brand.unique())))
 
 # partie sur les infos de réparation
-st.subheader(dict_screen_all[lang_var]["textInput15"])
+st.write(dict_screen_all[lang_var]["textInput15"])
 
 dict_useful={"TopCategory":{"UK":"TopCategory","FR":"TopCategory_FR"},
              "product_category":{"UK":"product_category","FR":"product_category_FR"}}
@@ -169,10 +172,10 @@ my_pb_cat_val = pb_category["values"][pb_category[lang_var].index(my_pb_cat_sele
 other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value="",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
-if col1.button(dict_screen_all[lang_var]["button1"]):
+if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
     st.write('-----------------------------------')
     the_author, the_quote = get_quote(my_quotes_data, my_final_object, lang_var)
-    st.write(the_quote)
+    bot_style(the_quote)
     st.write(the_author)
     with st.spinner('Wait for it...'):
         # write in db googlesheet
@@ -196,10 +199,10 @@ if col1.button(dict_screen_all[lang_var]["button1"]):
         else:
             the_letter = ''
             my_age_print = my_age
-        st.subheader('Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_brand, my_final_object, my_age_print, the_letter))
-        st.subheader(the_message)
-        st.subheader(the_bonus_message)
-        st.write("INFO: computed probability of failure at this age is {}%".format(proba_fail))
+        bot_style('#### Worth trying to repair your {} {} of {} year{} old ?'.format(my_final_brand, my_final_object, my_age_print, the_letter))
+        bot_style(the_message)
+        bot_style(the_bonus_message)
+        bot_style("##### INFO: computed probability of failure at this age is {}%".format(proba_fail))
     elif lang_var=='FR':
         if float(my_age) == 0:
             the_letter=''
@@ -210,13 +213,13 @@ if col1.button(dict_screen_all[lang_var]["button1"]):
         else:
             the_letter = ''
             my_age_print=my_age
-        st.subheader('Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age_print, the_letter))
-        st.subheader(the_message)
-        st.subheader(the_bonus_message)
-        st.write("INFO: la probabilité de tomber en panne à cet âge est de {}%".format(proba_fail))
+        bot_style('#### Réparer ta/ton {} {} de {} an{}, ça se tente ?'.format(my_final_object_FR, my_final_brand, my_age_print, the_letter))
+        bot_style(the_message)
+        bot_style(the_bonus_message)
+        bot_style("##### INFO: la probabilité de tomber en panne à cet âge est de {}%".format(proba_fail))
         st.caption("(* toutes les infos sur https://www.ecosystem.eco/fr/article/qualirepar-equipements-concernes)")
-    st.write(the_co2_message)
-    st.write(the_water_message)
+    bot_style(the_co2_message)
+    bot_style(the_water_message)
 
     if lang_var=='FR':
         my_final_object=my_final_object_FR
@@ -249,17 +252,17 @@ if col1.button(dict_screen_all[lang_var]["button1"]):
         if (my_percent_of_repair_brand != 'not found'):
             st.metric(dict_screen_all[lang_var]["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
 
-if col2.button(dict_screen_all[lang_var]["button2"]):
-    with st.spinner('Wait for it...'):
-        if lang_var == 'UK':
-            query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-        elif lang_var == 'FR':
-            my_final_object=my_final_object_FR
-            query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-
-        result_df, result_str, count_str = crawl_query(query)
-        st.markdown(f'{count_str}', unsafe_allow_html=True)
-        st.markdown(f'{result_str}', unsafe_allow_html=True)
+# if col2.button(dict_screen_all[lang_var]["button2"]):
+#     with st.spinner('Wait for it...'):
+#         if lang_var == 'UK':
+#             query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
+#         elif lang_var == 'FR':
+#             my_final_object=my_final_object_FR
+#             query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
+#
+#         result_df, result_str, count_str = crawl_query(query)
+#         st.markdown(f'{count_str}', unsafe_allow_html=True)
+#         st.markdown(f'{result_str}', unsafe_allow_html=True)
 
 st.write("-----------------------------------------------")
 

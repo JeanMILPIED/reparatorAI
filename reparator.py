@@ -59,8 +59,9 @@ dict_screen_all={"UK":
                      "textInput16": "Created in 2022, **ReparatorAI** is a **free tool** based on opendata. A database of more than 100'000 repairs is analysed at every request to offer you **best advice** about your broken object. Today, more than 1000 people use it worldwide.",
                      "textInput17": "5️⃣ **THE PROBLEM** looks like :",
                      "textInput18": '{} REPAIR SUCCESS RATE (%)',
-                     "textInput19": 'REPAIR SUCCESS RATE (%) FOR SAME AGE PRODUCT',
-                     "textInput20": 'Today in our database, you will find **{} repair events on {} equipment types from {} different brands**. Go for an exploration ⏬'
+                     "textInput19": 'SAME AGE',
+                     "textInput20": 'Today in our database, you will find **{} repair events on {} equipment types from {} different brands**. Go for an exploration ⏬',
+                     "textInput21": "YOUR PRODUCT"
                      },
                  "FR":
                     {"selectBox0":"1️⃣ **CATEGORIE**",
@@ -72,10 +73,10 @@ dict_screen_all={"UK":
                      "button1": "**Voyons si c'est réparable !** 🛠 ",
                      "button2": "Les meilleurs Tutos du Web 🚀",
                      "textInput4": 'STATISTIQUES DE PANNES dans notre database',
-                     "textInput5": "NOMBRE DE {} {} EN PANNE",
+                     "textInput5": "{} {} EN PANNE",
                      "textInput6": "AGE moyen des pannes (années)",
                      "textInput7": "% DE SUCCES DES REPARATIONS",
-                     "textInput8": "NOMBRE DE {} {} DU MÊME AGE",
+                     "textInput8": "{} {} DU MÊME AGE",
                      "textInput9": "% DE SUCCES DES REPARATIONS DE {}",
                      "textInput10": " 🦄 Envoie-moi un avis!",
                      "textInput11": " 🐓 Les acteurs Français de la réparation",
@@ -86,8 +87,9 @@ dict_screen_all={"UK":
                      "textInput16" : "Conçu en 2022, **ReparatorAI** est un outil **gratuit** basé sur de l'opendata. Une base de donnée de plus de 100'000 réparations est analysée à chaque requète pour t'informer du **meilleur choix face à une panne**. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                      "textInput17": "5️⃣ **LA PANNE** a l'air d'être d'origine :",
                      "textInput18": "% DE SUCCES DE REPARATION {} ",
-                     "textInput19": "% DE SUCCES DES REPARATIONS AU MEME AGE",
-                     "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras **{} réparations portant sur {} types d'équipements de {} marques différentes**. L'exploration c'est par là ⏬"
+                     "textInput19": "AU MEME AGE",
+                     "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras **{} réparations portant sur {} types d'équipements de {} marques différentes**. L'exploration c'est par là ⏬",
+                     "textInput21": "TON PRODUIT"
                      }
                  }
 
@@ -225,44 +227,28 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
         my_final_object=my_final_object_FR
 
     with st.expander(dict_screen_all[lang_var]["textInput4"]):
-        col5, col6, col7= st.columns(3)
-        st.metric(dict_screen_all[lang_var]["textInput5"].format(my_final_object, my_final_brand), my_number_of_machine_brand, delta=None, delta_color="normal")
-        st.metric(dict_screen_all[lang_var]["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
-        st.metric(dict_screen_all[lang_var]["textInput7"], round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
-
-        if my_pb_cat_val not in ['U','G']:
-            if my_percent_of_repair_product_pbCat != 'not found':
-                st.metric(dict_screen_all[lang_var]["textInput18"].format(my_pb_cat_selected), round(my_percent_of_repair_product_pbCat * 100, 1), delta=None,delta_color="normal")
+        col5, col6, col7= st.columns([3,1,3])
+        col5.metric(dict_screen_all[lang_var]["textInput7"], round(my_percent_of_repair*100,1), delta=None, delta_color="normal")
+        col7.metric(dict_screen_all[lang_var]["textInput5"].format(my_final_object, my_final_brand), my_number_of_machine_brand, delta=None, delta_color="normal")
+        col5.metric(dict_screen_all[lang_var]["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
 
         useful_data=useful_data.dropna(axis=0, subset=['product_age'])
         useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
-        col8,col9=st.columns(2)
-        st.metric(dict_screen_all[lang_var]["textInput8"].format(my_final_object, my_final_brand), useful_data_age.shape[0], delta=None, delta_color="normal")
+        col7.metric(dict_screen_all[lang_var]["textInput8"].format(my_final_object, my_final_brand), useful_data_age.shape[0], delta=None, delta_color="normal")
 
         if useful_data_age.shape[0]>0:
             my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)
-            st.metric(dict_screen_all[lang_var]["textInput19"], round(my_own_pc_repair * 100,1) , delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
+            # st.metric(dict_screen_all[lang_var]["textInput19"], round(my_own_pc_repair * 100,1) , delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
         else:
             my_own_pc_repair='not found'
 
-        if (my_percent_of_repair_product != 'not found'):
-            st.metric(dict_screen_all[lang_var]["textInput9"].format(my_final_object), round(my_percent_of_repair_product * 100, 1),
-                        delta=None, delta_color="normal")
 
-        if (my_percent_of_repair_brand != 'not found'):
-            st.metric(dict_screen_all[lang_var]["textInput9"].format(my_final_brand), round(my_percent_of_repair_brand * 100, 1))
+        repair_data=[my_percent_of_repair,my_percent_of_repair_product_pbCat,my_own_pc_repair,my_percent_of_repair_product,my_percent_of_repair_brand]
+        labels=[dict_screen_all[lang_var]["textInput21"],my_pb_cat_selected, dict_screen_all[lang_var]["textInput19"],my_final_object, my_final_brand]
+        df_repair=pd.DataFrame([round(my_pc * 100,1) for my_pc in repair_data])
+        df_repair[dict_screen_all[lang_var]["textInput7"]]=labels
+        st.bar_chart(df_repair,x=dict_screen_all[lang_var]["textInput7"])
 
-# if col2.button(dict_screen_all[lang_var]["button2"]):
-#     with st.spinner('Wait for it...'):
-#         if lang_var == 'UK':
-#             query='repair {} {} {} fixit tutorial'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-#         elif lang_var == 'FR':
-#             my_final_object=my_final_object_FR
-#             query='réparation {} {} {} tuto comment faire réparer'.format(my_final_object, my_final_brand, other_inputs).replace(' ','+')
-#
-#         result_df, result_str, count_str = crawl_query(query)
-#         st.markdown(f'{count_str}', unsafe_allow_html=True)
-#         st.markdown(f'{result_str}', unsafe_allow_html=True)
 
 st.write("-----------------------------------------------")
 

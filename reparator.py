@@ -238,7 +238,6 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
 
         if useful_data_age.shape[0]>0:
             my_own_pc_repair=round(useful_data_age[useful_data_age['repair_status']=='Fixed'].shape[0] / useful_data_age.shape[0], 2)
-            # st.metric(dict_screen_all[lang_var]["textInput19"], round(my_own_pc_repair * 100,1) , delta=round(my_own_pc_repair * 100 - my_percent_of_repair * 100,1), delta_color="normal")
         else:
             my_own_pc_repair='not found'
 

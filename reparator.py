@@ -171,7 +171,7 @@ if my_age=="":
 my_pb_cat_selected = st.selectbox(dict_screen_all[lang_var]["textInput17"], tuple(pb_category[lang_var]))
 my_pb_cat_val = pb_category["values"][pb_category[lang_var].index(my_pb_cat_selected)]
 
-other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value="",max_chars=None, key=None, type="default")
+other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value=" ",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):

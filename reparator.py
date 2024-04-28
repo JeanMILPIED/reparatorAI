@@ -233,7 +233,7 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
         col5.metric(dict_screen_all[lang_var]["textInput6"], my_age_mean_of_machine_brand, delta=None, delta_color="normal")
 
         useful_data=useful_data.dropna(axis=0, subset=['product_age'])
-        useful_data_age=useful_data[np.abs(useful_data.product_age - int(my_age))<=1]
+        useful_data_age=useful_data[abs(useful_data.product_age - int(my_age))<=1]
         col7.metric(dict_screen_all[lang_var]["textInput8"].format(my_final_object, my_final_brand), useful_data_age.shape[0], delta=None, delta_color="normal")
 
         if useful_data_age.shape[0]>0:

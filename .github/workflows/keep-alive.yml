@@ -1,0 +1,16 @@
+name: Trigger Probe of Deployed App on a CRON Schedule
+on:
+  schedule:
+    # Runs "at minute 0 past every 48 hour" (see https://crontab.guru)... ie: every 2 days
+    - cron: '0 */48 * * *'
+
+jobs:
+  probe_deployed_app:
+    runs-on: ubuntu-latest
+    name: A job to probe deployed app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Probe Deployed App Action Step
+        uses: ./probe-action # Uses an action in the probe-action directory
+        id: probe

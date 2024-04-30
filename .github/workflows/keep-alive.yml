@@ -4,6 +4,9 @@ on:
     # Runs "at minute 0 past every 48 hour" (see https://crontab.guru)... ie: every 2 days
     - cron: '0 */48 * * *'
 
+  # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
 jobs:
   probe_deployed_app:
     runs-on: ubuntu-latest

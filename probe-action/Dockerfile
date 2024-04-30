@@ -5,4 +5,7 @@ FROM ghcr.io/puppeteer/puppeteer:22.7.1
 RUN npm install puppeteer@22.7.1
 
 COPY . /home/pptruser/src
+
+RUN ls /home/pptruser/src/node_modules
+
 ENTRYPOINT [ "/bin/bash", "-c", "node -e \"$(</home/pptruser/src/probe.js)\"" ]

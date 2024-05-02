@@ -7,13 +7,26 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+#jobs:
+#  probe_deployed_app:
+#    runs-on: ubuntu-latest
+#    name: A job to probe deployed app
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#      - name: Probe Deployed App Action Step
+#        uses: ./probe-action # Uses an action in the probe-action directory
+#        id: probe
+
 jobs:
-  probe_deployed_app:
+  build-and-probe:
     runs-on: ubuntu-latest
-    name: A job to probe deployed app
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Probe Deployed App Action Step
-        uses: ./probe-action # Uses an action in the probe-action directory
-        id: probe
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: docker build -t my-probe-image .
+
+      - name: Run Docker Container
+        run: docker run --rm my-probe-image

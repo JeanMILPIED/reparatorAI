@@ -246,7 +246,17 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
         labels=[dict_screen_all[lang_var]["textInput21"],my_pb_cat_selected, dict_screen_all[lang_var]["textInput19"],my_final_object, my_final_brand]
         df_repair=pd.DataFrame([round(my_pc * 100,1) for my_pc in repair_data])
         df_repair[dict_screen_all[lang_var]["textInput7"]]=labels
-        st.bar_chart(df_repair,x=dict_screen_all[lang_var]["textInput7"])
+        df_repair.columns=[" ",dict_screen_all[lang_var]["textInput7"]]
+        st.vega_lite_chart(
+            df_repair,
+            {
+                "mark": {"type": "bar","cornerRadiusEnd": 4},
+                "encoding": {
+                    "x": {"field": " ", "type": "quantitative"},
+                    "y": {"field": dict_screen_all[lang_var]["textInput7"], "type": "nominal"},
+                },
+            }, use_container_width=True
+        )
 
 
 st.write("-----------------------------------------------")

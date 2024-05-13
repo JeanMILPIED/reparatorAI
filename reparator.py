@@ -191,6 +191,7 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
 
 
     st.write('-----------------------------------')
+    st.title('REPARATOR.AI')
     if lang_var=="UK":
         if float(my_age) == 0:
             the_letter = ''

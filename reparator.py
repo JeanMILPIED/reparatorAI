@@ -83,7 +83,8 @@ dict_screen_all={"UK":
                      "textInput18": '{} REPAIR SUCCESS RATE (%)',
                      "textInput19": 'SAME AGE',
                      "textInput20": 'Today in our database, you will find **{} repair events on {} equipment types from {} different brands**. Go for an exploration ⏬',
-                     "textInput21": "YOUR PRODUCT"
+                     "textInput21": "YOUR PRODUCT",
+                     "textInput22": "**I want to contribute 🚀**"
                      },
                  "FR":
                     {"selectBox0":"1️⃣ **CATEGORIE**",
@@ -111,7 +112,8 @@ dict_screen_all={"UK":
                      "textInput18": "% DE SUCCES DE REPARATION {} ",
                      "textInput19": "AU MEME AGE",
                      "textInput20": "Aujourd'hui, dans notre base de données, tu trouveras **{} réparations portant sur {} types d'équipements de {} marques différentes**. L'exploration c'est par là ⏬",
-                     "textInput21": "TON PRODUIT"
+                     "textInput21": "TON PRODUIT",
+                     "textInput22": "**Je veux contribuer 🚀**"
                      }
                  }
 
@@ -286,7 +288,7 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
         )
 
 stripe_payment_url_good = "https://buy.stripe.com/4gw16x8yqckc1nGeUU"
-col2.markdown(custom_button(stripe_payment_url_good, "**I want to contribute 🚀**", "#23c448"),
+col2.markdown(custom_button(stripe_payment_url_good, dict_screen_all[lang_var]["textInput22"], "#23c448"),
                         unsafe_allow_html=True)
 
 st.write("-----------------------------------------------")

@@ -27,10 +27,10 @@ lang_var = col12.radio("",('FR','UK'))
 col11.title('REPARATOR.AI')
 
 if lang_var=='UK':
-    col11.write('*In less than 1 minute, we will be the first to tell you if you can repair. For free, of course !*')
+    col11.write('#### *`In less than 1 minute`, we will be the first to tell you if you can `repair`. For `free`, of course !*')
     st.write('')
 elif lang_var=='FR':
-    col11.write("*En moins d'1 minute, le premier site à te dire si ça peut se réparer. Et c'est gratuit !*")
+    col11.write("#### *`En moins d'1 minute`, le premier site à te dire si ça peut se `réparer`. Et c'est `gratuit` !*")
     st.write('')
 else:
     st.write('error language')
@@ -54,7 +54,7 @@ dict_screen_all={"UK":
                      "textInput11":"🐓 French Actors for Repair",
                      "textInput12":"⚠ Age is missing",
                      "textInput13" : "6️⃣ **OTHER USEFUL INFO** here",
-                     "textInput14" : "About ReparatorAI 👓",
+                     "textInput14" : "#### About ReparatorAI 👓",
                      "textInput15" : "#### Should I repair or should I throw ? ⁉",
                      "textInput16": "Created in 2022, **ReparatorAI** is a **free tool** based on opendata. A database of more than 190'000 repairs is analysed at every request to offer you **best advice** about your broken object. Today, more than 1000 people use it worldwide.",
                      "textInput17": "5️⃣ **THE PROBLEM** looks like :",
@@ -82,7 +82,7 @@ dict_screen_all={"UK":
                      "textInput11": " 🐓 Les acteurs Français de la réparation",
                      "textInput12" : "⚠ Indiquez l'Age de la machine",
                      "textInput13" : "6️⃣ **AUTRE INFO UTILE** ici",
-                     "textInput14" : "Tout sur ReparatorAI 👓",
+                     "textInput14" : "#### Tout sur ReparatorAI 👓",
                      "textInput15" : "#### Dis-moi que je peux réparer mon objet en panne ! ⁉",
                      "textInput16" : "Conçu en 2022, **ReparatorAI** est un outil **gratuit** basé sur de l'opendata. Une base de donnée de plus de 190'000 réparations est analysée à chaque requète pour t'informer du **meilleur choix face à une panne**. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                      "textInput17": "5️⃣ **LA PANNE** a l'air d'être d'origine :",
@@ -133,45 +133,49 @@ my_logN_data=pd.read_csv('data/lognormal_fit_cat_202312.csv', index_col=0)
 my_quotes_data=pd.read_csv('data/quotes.csv', sep=';', encoding='latin')
 
 #qui sommes nous
-with st.expander(dict_screen_all[lang_var]["textInput14"]):
-    dict_screen_all[lang_var]["textInput16"]
+with st.container(border = True):
+    st.write(dict_screen_all[lang_var]["textInput14"])
+    st.write(dict_screen_all[lang_var]["textInput16"])
     st.write(dict_screen_all[lang_var]["textInput20"].format(my_data.shape[0], len(my_data.product_category.unique()),
                                                len(my_data.brand.unique())))
 
+st.divider()
 # partie sur les infos de réparation
 st.write(dict_screen_all[lang_var]["textInput15"])
 
-dict_useful={"TopCategory":{"UK":"TopCategory","FR":"TopCategory_FR"},
-             "product_category":{"UK":"product_category","FR":"product_category_FR"}}
+with st.container(border=True):
 
-_, topCategory_list = build_pick_up_list(my_data, dict_useful["TopCategory"][lang_var])
-my_final_cat = st.selectbox(dict_screen_all[lang_var]["selectBox0"], tuple(topCategory_list))
-my_final_cat = my_final_cat.split(' -')[0]
-index_in_list = topCategory[lang_var].index(my_final_cat)
-my_final_cat = topCategory["UK"][index_in_list]
+    dict_useful={"TopCategory":{"UK":"TopCategory","FR":"TopCategory_FR"},
+                 "product_category":{"UK":"product_category","FR":"product_category_FR"}}
 
-_, selectObjectList_cat_list = build_pick_up_list(my_data[my_data.loc[:,dict_useful["TopCategory"]["UK"]] == my_final_cat],
-                                                     dict_useful["product_category"][lang_var])
-my_final_object = st.selectbox(dict_screen_all[lang_var]["selectBox1"], tuple(selectObjectList_cat_list))
-my_final_object = my_final_object.split(' -')[0]
-index_in_list = selectObjectList[lang_var].index(my_final_object)
-my_final_object = selectObjectList["UK"][index_in_list]
-my_final_object_FR = selectObjectList["FR"][index_in_list]
+    _, topCategory_list = build_pick_up_list(my_data, dict_useful["TopCategory"][lang_var])
+    my_final_cat = st.selectbox(dict_screen_all[lang_var]["selectBox0"], tuple(topCategory_list))
+    my_final_cat = my_final_cat.split(' -')[0]
+    index_in_list = topCategory[lang_var].index(my_final_cat)
+    my_final_cat = topCategory["UK"][index_in_list]
 
-_, selectBrandList = build_pick_up_list(my_data[(my_data.loc[:,dict_useful["TopCategory"]["UK"]] == my_final_cat)
-                                                & (my_data.loc[:,dict_useful["product_category"]["UK"]] == my_final_object)],
-                                                         'brand')
-my_final_brand = st.selectbox(dict_screen_all[lang_var]["selectBox2"], tuple(selectBrandList))
-my_final_brand = my_final_brand.split(' -')[0]
-my_age=st.number_input(dict_screen_all[lang_var]["textInput3"], value=0, min_value=0, max_value=99, key=None, step=1)
+    _, selectObjectList_cat_list = build_pick_up_list(my_data[my_data.loc[:,dict_useful["TopCategory"]["UK"]] == my_final_cat],
+                                                         dict_useful["product_category"][lang_var])
+    my_final_object = st.selectbox(dict_screen_all[lang_var]["selectBox1"], tuple(selectObjectList_cat_list))
+    my_final_object = my_final_object.split(' -')[0]
+    index_in_list = selectObjectList[lang_var].index(my_final_object)
+    my_final_object = selectObjectList["UK"][index_in_list]
+    my_final_object_FR = selectObjectList["FR"][index_in_list]
 
-if my_age=="":
-    st.write(dict_screen_all[lang_var]['textInput12'])
+    _, selectBrandList = build_pick_up_list(my_data[(my_data.loc[:,dict_useful["TopCategory"]["UK"]] == my_final_cat)
+                                                    & (my_data.loc[:,dict_useful["product_category"]["UK"]] == my_final_object)],
+                                                             'brand')
+    my_final_brand = st.selectbox(dict_screen_all[lang_var]["selectBox2"], tuple(selectBrandList))
+    my_final_brand = my_final_brand.split(' -')[0]
+    my_age=st.number_input(dict_screen_all[lang_var]["textInput3"], value=0, min_value=0, max_value=99, key=None, step=1)
 
-my_pb_cat_selected = st.selectbox(dict_screen_all[lang_var]["textInput17"], tuple(pb_category[lang_var]))
-my_pb_cat_val = pb_category["values"][pb_category[lang_var].index(my_pb_cat_selected)]
+    if my_age=="":
+        st.write(dict_screen_all[lang_var]['textInput12'])
 
-other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value=" ",max_chars=None, key=None, type="default")
+    my_pb_cat_selected = st.selectbox(dict_screen_all[lang_var]["textInput17"], tuple(pb_category[lang_var]))
+    my_pb_cat_val = pb_category["values"][pb_category[lang_var].index(my_pb_cat_selected)]
+
+    other_inputs = st.text_input(dict_screen_all[lang_var]['textInput13'], value=" ",max_chars=None, key=None, type="default")
 
 col1, col3, col2=st.columns([2,1,2])
 if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):

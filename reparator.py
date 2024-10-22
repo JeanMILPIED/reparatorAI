@@ -14,6 +14,28 @@ my_credentials = service_account.Credentials.from_service_account_info(service_a
 gc = pygsheets.authorize(custom_credentials=my_credentials)
 DB_URL="https://docs.google.com/spreadsheets/d/1m0lG7b2Ze-Armz-C-5MLH960dk5v1I-mLyoaUk5WAyE/edit?usp=drive_link"
 
+# Create a button with custom styles
+def custom_button(the_link, the_text, the_bkgd_color):
+    button_html = f"""
+    <style>
+    .raizuum-button {{
+        background-color: {the_bkgd_color}; /* Blue default background */
+        color: white !important; /* White font with important to override other styles */
+        padding: 5px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px; /* Rounded square shape */
+        border: none; /* Remove border */
+    }}
+    </style>
+    <a href="{the_link}" target="_blank" class="raizuum-button">{the_text}</a>
+    """
+    return button_html
+
 def local_css(filename):
     with open(filename) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -263,6 +285,9 @@ if col1.button(dict_screen_all[lang_var]["button1"], type="primary"):
             }, use_container_width=True
         )
 
+stripe_payment_url_good = "https://buy.stripe.com/4gw16x8yqckc1nGeUU"
+col2.markdown(custom_button(stripe_payment_url_good, "**I want to contribute 🚀**", "#23c448"),
+                        unsafe_allow_html=True)
 
 st.write("-----------------------------------------------")
 
@@ -317,12 +342,10 @@ st.image("images/bannerBottom.jpg")
 st.caption('Version 22/10/2024 - ')
 if lang_var=='UK':
     st.caption('Data source is : https://openrepair.org/open-data/downloads/')
-    st.caption('You want to contribute ? I am a huge coffee fan! https://www.buymeacoffee.com/jeanmilpied ')
     st.caption('Made with 💛 with Streamlit and Python')
     st.caption("Banner images generated with https://lexica.art")
 elif lang_var=='FR':
     st.caption('Lien vers les données sources : https://openrepair.org/open-data/downloads/')
-    st.caption("Tu veux contribuer ? ça tombe bien, j'adore le café: ! https://www.buymeacoffee.com/jeanmilpied ")
     st.caption('Fait avec 💛 avec Streamlit et Python')
     st.caption("Images générées par LexicaArt : https://lexica.art")
 else:

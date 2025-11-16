@@ -146,7 +146,7 @@ selectObjectList={"UK": ['POWER TOOL', 'TOY', 'HAIR DRYER', 'DECORATIVE OR SAFET
                            'CONSOLE DE JEUX VIDÉO']}
 
 #nettoyage de dataset source
-my_data=pd.read_csv('data/OpenRepairData_v0.3_aggregate_202407.csv')
+my_data=pd.read_csv('data/OpenRepairData_v0.3_aggregate_202507.csv')
 my_data=clean_df(my_data)
 my_top_cat=''
 my_final_object=''

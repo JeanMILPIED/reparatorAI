@@ -78,7 +78,7 @@ dict_screen_all={"UK":
                      "textInput13" : "6️⃣ **OTHER USEFUL INFO** here",
                      "textInput14" : "#### About ReparatorAI 👓",
                      "textInput15" : "#### Should I repair or should I throw ? ⁉",
-                     "textInput16": "Created in 2022, **ReparatorAI** is a **free tool** based on opendata. A database of more than 190'000 repairs is analysed at every request to offer you **best advice** about your broken object. Today, more than 1000 people use it worldwide.",
+                     "textInput16": "Created in 2022, **ReparatorAI** is a **free tool** based on opendata. A database of more than 290'000 repairs is analysed at every request to offer you **best advice** about your broken object. Today, more than 1000 people use it worldwide.",
                      "textInput17": "5️⃣ **THE PROBLEM** looks like :",
                      "textInput18": '{} REPAIR SUCCESS RATE (%)',
                      "textInput19": 'SAME AGE',
@@ -107,7 +107,7 @@ dict_screen_all={"UK":
                      "textInput13" : "6️⃣ **AUTRE INFO UTILE** ici",
                      "textInput14" : "#### Tout sur ReparatorAI 👓",
                      "textInput15" : "#### Dis-moi que je peux réparer mon objet en panne ! ⁉",
-                     "textInput16" : "Conçu en 2022, **ReparatorAI** est un outil **gratuit** basé sur de l'opendata. Une base de donnée de plus de 190'000 réparations est analysée à chaque requète pour t'informer du **meilleur choix face à une panne**. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
+                     "textInput16" : "Conçu en 2022, **ReparatorAI** est un outil **gratuit** basé sur de l'opendata. Une base de donnée de plus de 290'000 réparations est analysée à chaque requète pour t'informer du **meilleur choix face à une panne**. Il est aujourd'hui utilisé par plus de 1000 personnes dans le monde.",
                      "textInput17": "5️⃣ **LA PANNE** a l'air d'être d'origine :",
                      "textInput18": "% DE SUCCES DE REPARATION {} ",
                      "textInput19": "AU MEME AGE",
@@ -341,7 +341,7 @@ gif_html = get_img_with_href('images/CertifiedRefurb_980x400.jpg', SC_ebay)
 st.markdown(gif_html, unsafe_allow_html=True)
 
 st.image("images/bannerBottom.jpg")
-st.caption('Version 22/10/2024 - ')
+st.caption('Version 16-11-2025 - ')
 if lang_var=='UK':
     st.caption('Data source is : https://openrepair.org/open-data/downloads/')
     st.caption('Made with 💛 with Streamlit and Python')
